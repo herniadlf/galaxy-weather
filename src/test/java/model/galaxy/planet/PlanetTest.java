@@ -25,4 +25,12 @@ public class PlanetTest {
         expectedPosition = new GalaxyPosition(500.0, 0.0);
         Assert.assertEquals(planet.getPosition(), expectedPosition);
     }
+
+    @Test public void move90DegreesCounterClockWiseTest(){
+        speed = new OrbitalSpeed(OrbitalSpeed.ORIENTATION.COUNTER_CLOCKWISE, 90);
+        planet = new DummyPlanetImpl(initPosition, speed);
+        planet.move();
+        expectedPosition = new GalaxyPosition(-500.0, 0.0);
+        Assert.assertEquals(planet.getPosition(), expectedPosition);
+    }
 }

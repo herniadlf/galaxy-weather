@@ -22,8 +22,17 @@ public abstract class Planet extends OrbitalComponent {
 
     @Override
     public GalaxyPosition move() {
-        final GalaxyPosition newPosition = new GalaxyPosition(500.0, 0.0);
-        position = newPosition;
-        return newPosition;
+        final GalaxyPosition newPosition;
+        switch (speed.orientation){
+            case CLOCKWISE:
+                newPosition = new GalaxyPosition(500.0, 0.0);
+                position = newPosition;
+                return newPosition;
+            case COUNTER_CLOCKWISE:
+                newPosition = new GalaxyPosition(-500.0, 0.0);
+                position = newPosition;
+                return newPosition;
+        }
+        throw new RuntimeException("Undefined speed orientation");
     }
 }
