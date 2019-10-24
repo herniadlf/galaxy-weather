@@ -5,12 +5,12 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class GalaxyPosition {
-    final Double x;
-    final Double y;
+    public final Double x;
+    public final Double y;
 
     public GalaxyPosition(@NotNull Double _x, @NotNull Double _y){
-        x = _x;
-        y = _y;
+        x = correction(_x);
+        y = correction(_y);
     }
 
     @Override
@@ -23,5 +23,11 @@ public class GalaxyPosition {
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
+    }
+
+    private static final double EPSILON = 1e-7;
+    private static Double correction(Double number){
+        final double positive = number < 0 ? number*-1 : number;
+        return positive < EPSILON ? 0 : number;
     }
 }
