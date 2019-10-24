@@ -1,5 +1,7 @@
-package model;
+package model.galaxy;
 
+import model.galaxy.Galaxy;
+import model.galaxy.OrbitalCenter;
 import org.junit.Assert;
 import org.junit.Test;
 

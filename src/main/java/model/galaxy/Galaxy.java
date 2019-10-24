@@ -1,4 +1,4 @@
-package model;
+package model.galaxy;
 
 import java.util.ArrayList;
 import java.util.List;

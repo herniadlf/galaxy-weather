@@ -1,7 +1,7 @@
-package model;
+package model.galaxy.movement;
 
 public interface OrbitalMovable {
 
     OrbitalSpeed getSpeed();
-    Position move();
+    GalaxyPosition move();
 }
