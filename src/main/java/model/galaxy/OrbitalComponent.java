@@ -10,8 +10,11 @@ public abstract class OrbitalComponent extends GalaxyComponent implements Orbita
     protected final Double radius;
     protected Double angle;
 
-    protected OrbitalComponent(GalaxyPosition initPosition) {
+    protected OrbitalComponent(GalaxyPosition initPosition) throws Exception {
         super(initPosition);
+        if (initPosition.x == 0 && initPosition.y == 0) {
+            throw new Exception("Orbital position cannot be (0,0)");
+        }
         radius = Math.hypot(position.x, position.y);
         angle = Math.asin(position.y / radius);
     }
