@@ -42,7 +42,7 @@ public class GalaxyTest {
 
     @Test public void galaxyFinishDayTest(){
         final Galaxy galaxy = createGalaxyWithOneComponent();
-        galaxy.finishDay();
+        galaxy.newDay();
         final OrbitalComponent orbitalComponent = galaxy.getComponents().get(0);
         final GalaxyPosition newPosition = new GalaxyPosition(500.0, 0.0);
         Assert.assertEquals(orbitalComponent.getPosition(), newPosition);

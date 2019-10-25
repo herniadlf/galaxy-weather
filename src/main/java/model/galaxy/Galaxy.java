@@ -1,19 +1,20 @@
 package model.galaxy;
 
 import model.galaxy.movement.OrbitalMovable;
+import model.galaxy.weather.DefaultWeatherGuru;
+import model.galaxy.weather.WeatherGuru;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Galaxy {
-    private final List<OrbitalComponent> components = new ArrayList<>();
+    private List<OrbitalComponent> components;
     private OrbitalCenter center;
+    private WeatherGuru weatherGuru;
 
 
-    private Galaxy(){
-        center = new OrbitalCenter();
-    }
+    private Galaxy(){}
 
     public OrbitalCenter getCenter() {
         return center;
@@ -22,7 +23,7 @@ public class Galaxy {
         return components;
     }
 
-    public void finishDay() {
+    public void newDay() {
         components.forEach(OrbitalMovable::move);
     }
 
@@ -36,6 +37,7 @@ public class Galaxy {
             centerBuilder = _center;
             return this;
         }
+
         public GalaxyBuilder withComponents(@NotNull List<OrbitalComponent> _components){
             componentsBuilder.addAll(_components);
             return this;
@@ -44,8 +46,9 @@ public class Galaxy {
         public Galaxy create(){
             assert centerBuilder != null;
             final Galaxy galaxy = new Galaxy();
-            galaxy.components.addAll(componentsBuilder);
+            galaxy.components = new ArrayList<>(componentsBuilder);
             galaxy.center = centerBuilder;
+            galaxy.weatherGuru = new DefaultWeatherGuru(galaxy.center, galaxy.components);
             return galaxy;
         }
     }
