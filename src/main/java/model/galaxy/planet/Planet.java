@@ -2,6 +2,7 @@ package model.galaxy.planet;
 
 
 import model.galaxy.OrbitalComponent;
+import model.galaxy.OrbitalComponentException;
 import model.galaxy.movement.OrbitalSpeed;
 import model.galaxy.movement.GalaxyPosition;
 
@@ -10,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public abstract class Planet extends OrbitalComponent {
     private final OrbitalSpeed speed;
 
-    protected Planet(@NotNull GalaxyPosition initPosition, @NotNull OrbitalSpeed _speed) {
+    protected Planet(@NotNull GalaxyPosition initPosition, @NotNull OrbitalSpeed _speed) throws OrbitalComponentException {
         super(initPosition);
         speed = _speed;
     }

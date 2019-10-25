@@ -14,7 +14,7 @@ public class PlanetTest {
     private OrbitalSpeed speed = null;
     private DummyPlanetImpl planet = null;
 
-    @Before public void setup(){
+    @Before public void setup() throws Exception {
         initPosition = new GalaxyPosition(0.0,500.0);
         speed = new OrbitalSpeed(OrbitalSpeed.ORIENTATION.CLOCKWISE, 90);
         planet = new DummyPlanetImpl(initPosition, speed);
@@ -26,7 +26,7 @@ public class PlanetTest {
         Assert.assertEquals(planet.getPosition(), expectedPosition);
     }
 
-    @Test public void move45DegreesClockWiseTest(){
+    @Test public void move45DegreesClockWiseTest() throws Exception{
         speed = new OrbitalSpeed(OrbitalSpeed.ORIENTATION.CLOCKWISE, 45);
         planet = new DummyPlanetImpl(initPosition, speed);
         planet.move();
@@ -35,7 +35,7 @@ public class PlanetTest {
         Assert.assertEquals(planet.getPosition(), expectedPosition);
     }
 
-    @Test public void move90DegreesClockWise2StepsTest(){
+    @Test public void move90DegreesClockWise2StepsTest() throws Exception{
         speed = new OrbitalSpeed(OrbitalSpeed.ORIENTATION.CLOCKWISE, 45);
         planet = new DummyPlanetImpl(initPosition, speed);
         planet.move();
@@ -44,7 +44,7 @@ public class PlanetTest {
         Assert.assertEquals(planet.getPosition(), expectedPosition);
     }
 
-    @Test public void move90DegreesCounterClockWise2StepsTest(){
+    @Test public void move90DegreesCounterClockWise2StepsTest() throws Exception{
         speed = new OrbitalSpeed(OrbitalSpeed.ORIENTATION.COUNTER_CLOCKWISE, 45);
         planet = new DummyPlanetImpl(initPosition, speed);
         planet.move();
@@ -53,7 +53,7 @@ public class PlanetTest {
         Assert.assertEquals(planet.getPosition(), expectedPosition);
     }
 
-    @Test public void move90DegreesCounterClockWiseTest(){
+    @Test public void move90DegreesCounterClockWiseTest() throws Exception{
         speed = new OrbitalSpeed(OrbitalSpeed.ORIENTATION.COUNTER_CLOCKWISE, 90);
         planet = new DummyPlanetImpl(initPosition, speed);
         planet.move();
@@ -61,7 +61,7 @@ public class PlanetTest {
         Assert.assertEquals(planet.getPosition(), expectedPosition);
     }
 
-    @Test public void move45DegreesCounterClockWiseTest(){
+    @Test public void move45DegreesCounterClockWiseTest() throws Exception{
         speed = new OrbitalSpeed(OrbitalSpeed.ORIENTATION.COUNTER_CLOCKWISE, 45);
         planet = new DummyPlanetImpl(initPosition, speed);
         planet.move();
