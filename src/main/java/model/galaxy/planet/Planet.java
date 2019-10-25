@@ -8,10 +8,10 @@ import model.galaxy.movement.GalaxyPosition;
 
 import javax.validation.constraints.NotNull;
 
-public abstract class Planet extends OrbitalComponent {
+public class Planet extends OrbitalComponent {
     private final OrbitalSpeed speed;
 
-    protected Planet(@NotNull GalaxyPosition initPosition, @NotNull OrbitalSpeed _speed) throws OrbitalComponentException {
+    public Planet(@NotNull GalaxyPosition initPosition, @NotNull OrbitalSpeed _speed) throws OrbitalComponentException {
         super(initPosition);
         speed = _speed;
     }

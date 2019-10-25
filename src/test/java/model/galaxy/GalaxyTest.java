@@ -2,7 +2,7 @@ package model.galaxy;
 
 import model.galaxy.movement.GalaxyPosition;
 import model.galaxy.movement.OrbitalSpeed;
-import model.galaxy.planet.DummyPlanetImpl;
+import model.galaxy.planet.Planet;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,7 +25,7 @@ public class GalaxyTest {
         builder.withCenter(new OrbitalCenter());
         OrbitalComponent component = null;
         try{
-            component = new DummyPlanetImpl(planet1Position, speed1);
+            component = new Planet(planet1Position, speed1);
         } catch (final Exception ignore){}
         final ArrayList<OrbitalComponent> components = new ArrayList<>();
         components.add(component);
