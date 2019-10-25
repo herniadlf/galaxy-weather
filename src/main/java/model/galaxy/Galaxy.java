@@ -8,11 +8,15 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Galaxy Class contains a center and orbital components around it
+ * Also, it needs to declare a implementation of 'WeatherGuru'
+ * the interface that read the components position and provides info about the galaxy weather.
+ */
 public class Galaxy {
     private List<OrbitalComponent> components;
     private OrbitalCenter center;
     private WeatherGuru weatherGuru;
-
 
     private Galaxy(){}
 
