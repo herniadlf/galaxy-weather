@@ -1,7 +1,7 @@
 package model.galaxy;
 
 import model.galaxy.movement.OrbitalMovable;
-import model.galaxy.weather.DefaultWeatherGuru;
+import model.galaxy.weather.defaultimpl.DefaultWeatherGuru;
 import model.galaxy.weather.WeatherGuru;
 
 import javax.validation.constraints.NotNull;

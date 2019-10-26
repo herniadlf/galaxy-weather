@@ -1,14 +1,15 @@
 package model.galaxy.movement;
 
 
+import model.galaxy.Orientation;
+
 import javax.validation.constraints.NotNull;
 
 public class OrbitalSpeed {
-    public enum ORIENTATION { CLOCKWISE, COUNTER_CLOCKWISE }
-    public final ORIENTATION orientation;
+    public final Orientation orientation;
     public final Integer rate;
 
-    public OrbitalSpeed(ORIENTATION _orientation, @NotNull Integer _rate){
+    public OrbitalSpeed(Orientation _orientation, @NotNull Integer _rate){
         orientation = _orientation;
         rate = _rate;
     }

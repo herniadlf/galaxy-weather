@@ -4,5 +4,5 @@ public interface WeatherGuru {
     GalaxyWeather calculateWeather();
     Boolean allAligned();
     Boolean componentsAlligned();
-    Boolean centerIsSurrended();
+    Boolean centerIsSurrounded();
 }

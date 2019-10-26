@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class GalaxyTest {
 
-    private final OrbitalSpeed speed1 = new OrbitalSpeed(OrbitalSpeed.ORIENTATION.CLOCKWISE, 90);
+    private final OrbitalSpeed speed1 = new OrbitalSpeed(Orientation.CLOCKWISE, 90);
     private final GalaxyPosition planet1Position= new GalaxyPosition(0.0, 500.0);
 
     @Test public void galaxyBuilderDefaultCreationTest(){
