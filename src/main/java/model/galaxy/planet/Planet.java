@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class Planet extends OrbitalComponent {
     private final OrbitalSpeed speed;
 
-    public Planet(@NotNull GalaxyPosition initPosition, @NotNull OrbitalSpeed _speed) throws OrbitalComponentException {
+    public Planet(@NotNull GalaxyPosition initPosition, @NotNull OrbitalSpeed _speed){
         super(initPosition);
         speed = _speed;
     }
@@ -21,6 +21,9 @@ public class Planet extends OrbitalComponent {
         return speed;
     }
 
+    /**
+     * @return the new position after a movement using planet orbitalSpeed
+     */
     @Override
     public GalaxyPosition move() {
         final double newAngle;

@@ -19,7 +19,7 @@ public abstract class OrbitalComponent extends GalaxyComponent implements Orbita
      * If X and Y position are both 0, it means no distance from center.
      * We have to fail otherwise the Math Op's will fail at some point
      */
-    protected OrbitalComponent(GalaxyPosition initPosition) throws OrbitalComponentException {
+    protected OrbitalComponent(GalaxyPosition initPosition){
         super(initPosition);
         if (initPosition.x == 0 && initPosition.y == 0) {
             throw new OrbitalComponentException("Orbital position cannot be (0,0)");
@@ -28,6 +28,9 @@ public abstract class OrbitalComponent extends GalaxyComponent implements Orbita
         angle = Math.asin(position.y / radius);
     }
 
+    /**
+     * @param newAngle after an angular movement, so here we calculate the new position
+     */
     protected void updatePosition(@NotNull Double newAngle){
         angle = newAngle;
         final Double newXPosition = Math.cos(angle) * radius;
