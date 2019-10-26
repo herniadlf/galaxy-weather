@@ -35,8 +35,11 @@ public class DefaultWeatherGuru implements WeatherGuru{
         return GeometryUtils.lineContains(line, components.get(1), components.get(2));
     }
 
-    public Boolean componentsAligned(){
-        return false;
+    public Boolean componentsAlligned(){
+        final GalaxyPosition pos1 = components.get(0).getPosition();
+        final GalaxyPosition pos2 = components.get(1).getPosition();
+        final StraightLine line = GeometryUtils.buildLine(pos1, pos2);
+        return GeometryUtils.lineContains(line, components.get(2));
     }
 
     public Boolean centerIsSurrended(){

@@ -66,32 +66,61 @@ public class DefaultWeatherGuruTest {
         return new DefaultWeatherGuru(new OrbitalCenter(), components);
     }
 
-    @Test public void allignedComponentsInYAxisTest(){
+    @Test public void allAllignedInYAxisTest(){
         final DefaultWeatherGuru guru = createGuru1();
+        Assert.assertEquals(true, guru.allAligned());
+    }
+
+    @Test public void allignedComponentssInYAxisTest(){
+        final DefaultWeatherGuru guru = createGuru1();
+        Assert.assertEquals(true, guru.componentsAlligned());
+    }
+
+    @Test public void allAllignedInYAxisMoveTest(){
+        final DefaultWeatherGuru guru = createGuru1();
+        components.forEach(OrbitalComponent::move);
         Assert.assertEquals(true, guru.allAligned());
     }
 
     @Test public void allignedComponentsInYAxisMoveTest(){
         final DefaultWeatherGuru guru = createGuru1();
         components.forEach(OrbitalComponent::move);
+        Assert.assertEquals(true, guru.componentsAlligned());
+    }
+
+    @Test public void allAllignedInXAxisTest(){
+        final DefaultWeatherGuru guru = createGuru2();
         Assert.assertEquals(true, guru.allAligned());
     }
 
     @Test public void allignedComponentsInXAxisTest(){
         final DefaultWeatherGuru guru = createGuru2();
+        Assert.assertEquals(true, guru.componentsAlligned());
+    }
+
+    @Test public void allAllignedInXAxisMoveTest(){
+        final DefaultWeatherGuru guru = createGuru2();
+        components.forEach(OrbitalComponent::move);
         Assert.assertEquals(true, guru.allAligned());
     }
 
     @Test public void allignedComponentsInXAxisMoveTest(){
         final DefaultWeatherGuru guru = createGuru2();
         components.forEach(OrbitalComponent::move);
-        Assert.assertEquals(true, guru.allAligned());
+        Assert.assertEquals(true, guru.componentsAlligned());
     }
 
-    @Test public void allignedComponentsWithDiffrentSpeedTest(){
+    @Test public void allAllignedWithDiffrentSpeedTest(){
         final DefaultWeatherGuru guru = createGuru3();
         Assert.assertEquals(true, guru.allAligned());
         components.forEach(OrbitalComponent::move);
         Assert.assertEquals(false, guru.allAligned());
+    }
+
+    @Test public void allignedComponentsWithDiffrentSpeedTest(){
+        final DefaultWeatherGuru guru = createGuru3();
+        Assert.assertEquals(true, guru.componentsAlligned());
+        components.forEach(OrbitalComponent::move);
+        Assert.assertEquals(false, guru.componentsAlligned());
     }
 }
