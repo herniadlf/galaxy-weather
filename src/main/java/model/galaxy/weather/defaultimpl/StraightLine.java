@@ -29,23 +29,21 @@ public class StraightLine {
      * y = m*x + b => b = y - m*x
      */
     protected static Double getIntercept(Double slope, GalaxyPosition pos){
-        return pos.y - (slope*pos.x);
+        return slope.equals(Double.MAX_VALUE) ? 0.0 : pos.y - (slope*pos.x);
     }
 
     protected static StraightLine buildLine(GalaxyPosition pos1, GalaxyPosition pos2){
         final Double slope = getSlope(pos1, pos2);
         final Double intercept = getIntercept(slope, pos1);
+        if (slope.equals(Double.MAX_VALUE) && intercept.equals(0.0)) // in that case, is a parallel to Y line
+            return new ParallelToYStraightLine(new StraightLine(slope,intercept), pos1.x);
         return new StraightLine(slope, intercept);
     }
 
     /**
-     * @return we check if the previously line contains 'component' position(a point)
-     * If the slope is INFINITE we only check for X axis matching
+     * @return we try to solve the ecuation to check if the line contains the point
      */
     protected Boolean contains(@NotNull GalaxyPosition point) {
-        if (slope.equals(Double.MAX_VALUE)){
-            return point.x.equals(0.0);
-        }
         final Double y = point.y;
         final double lineResult = (slope * point.x) + intercept;
         return y.equals(lineResult);

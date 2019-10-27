@@ -1,4 +1,4 @@
-package model.galaxy.weather;
+package model.galaxy.weather.defaultimpl;
 
 import model.galaxy.OrbitalCenter;
 import model.galaxy.OrbitalComponent;
@@ -6,9 +6,8 @@ import model.galaxy.Orientation;
 import model.galaxy.movement.GalaxyPosition;
 import model.galaxy.movement.OrbitalSpeed;
 import model.galaxy.planet.Planet;
-import model.galaxy.weather.defaultimpl.DefaultWeatherGuru;
+import model.galaxy.weather.GalaxyWeather;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -184,26 +183,22 @@ public class DefaultWeatherGuruTest {
         Assert.assertEquals(true, guru.centerIsSurrounded());
     }
 
-    @Ignore
     @Test public void allignedWithCenterMeansDroughtWeatherTest(){
         final DefaultWeatherGuru guru = createGuru1();
         Assert.assertEquals(guru.calculateWeather(), GalaxyWeather.DROUGHT);
     }
 
-    @Ignore
     @Test public void allignedWithoutCenterMeansOptimumWeatherTest(){
         final DefaultWeatherGuru guru = createGuru5();
         Assert.assertEquals(guru.calculateWeather(), GalaxyWeather.OPTIMUM);
     }
 
-    @Ignore
     @Test public void surroundedCenterMeansRainyWeatherTest(){
         final DefaultWeatherGuru guru = createGuru4();
         components.forEach(OrbitalComponent::move);
         Assert.assertEquals(guru.calculateWeather(), GalaxyWeather.RAINY);
     }
 
-    @Ignore
     @Test public void notAllignedAndNotSurroundedCenterMeansNormalWeatherTest(){
         final DefaultWeatherGuru guru = createGuru6();
         components.forEach(OrbitalComponent::move);

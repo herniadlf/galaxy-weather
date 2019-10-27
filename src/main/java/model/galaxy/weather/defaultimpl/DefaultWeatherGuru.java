@@ -1,5 +1,6 @@
 package model.galaxy.weather.defaultimpl;
 
+import model.galaxy.GalaxyComponent;
 import model.galaxy.OrbitalCenter;
 import model.galaxy.OrbitalComponent;
 import model.galaxy.movement.GalaxyPosition;
@@ -13,7 +14,7 @@ import java.util.List;
  * The DefaultWeatherGuru class is a implementation that solves the given exercise
  * It also serves as example for further implementations
  */
-public class DefaultWeatherGuru implements WeatherGuru {
+public class DefaultWeatherGuru implements WeatherGuru<Triangle> {
     final OrbitalCenter center;
     final List<OrbitalComponent> components;
 
@@ -26,7 +27,10 @@ public class DefaultWeatherGuru implements WeatherGuru {
     }
 
     public GalaxyWeather calculateWeather(){
-        throw new RuntimeException("Not yet");
+        if (allAligned()) return GalaxyWeather.DROUGHT;
+        if (componentsAlligned()) return GalaxyWeather.OPTIMUM;
+        if (centerIsSurrounded()) return GalaxyWeather.RAINY;
+        return GalaxyWeather.NORMAL;
     }
 
     public Boolean allAligned(){
@@ -45,10 +49,15 @@ public class DefaultWeatherGuru implements WeatherGuru {
 
     public Boolean centerIsSurrounded(){
         if (componentsAlligned()) return false;
-        final Triangle triangle = Triangle.buildTriangleWithPoints(components.get(0).getPosition(),
-                                                                    components.get(1).getPosition(),
-                                                                    components.get(2).getPosition());
+        final Triangle triangle = buildFigure(components.get(0), components.get(1), components.get(2));
         return triangle.contains(center.getPosition());
+    }
+
+    @Override
+    public Triangle buildFigure(GalaxyComponent... _components) {
+        return Triangle.buildTriangleWithPoints(components.get(0).getPosition(),
+                components.get(1).getPosition(),
+                components.get(2).getPosition());
     }
 
 }

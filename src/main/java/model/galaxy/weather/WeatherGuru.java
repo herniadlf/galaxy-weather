@@ -1,8 +1,11 @@
 package model.galaxy.weather;
 
-public interface WeatherGuru {
+import model.galaxy.GalaxyComponent;
+
+public interface WeatherGuru<T> {
     GalaxyWeather calculateWeather();
     Boolean allAligned();
     Boolean componentsAlligned();
     Boolean centerIsSurrounded();
+    T buildFigure(GalaxyComponent... components);
 }
