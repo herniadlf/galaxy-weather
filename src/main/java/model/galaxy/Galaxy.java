@@ -13,9 +13,9 @@ import java.util.*;
  * the interface that read the components position and provides info about the galaxy weather.
  */
 public class Galaxy {
-    private List<OrbitalComponent> components;
-    private OrbitalCenter center;
-    private WeatherGuru weatherGuru;
+    private List<OrbitalComponent> components = null;
+    private OrbitalCenter center = null;
+    private WeatherGuru<?> weatherGuru = null;
 
     private Galaxy(){}
 
