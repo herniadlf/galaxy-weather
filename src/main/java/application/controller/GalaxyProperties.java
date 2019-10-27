@@ -15,15 +15,18 @@ public class GalaxyProperties {
 
     private List<PlanetProperties> planets = new ArrayList<>();
     public static class PlanetProperties{
+        private double initPositionX = 0.0;
+        private double initPositionY = 0.0;
         private int speed = 0;
         private boolean clockwise = true;
-        private double distance = 0.0;
+        public double getInitPositionX(){ return initPositionX; }
+        public void setInitPositionX(double _initPositionX){ initPositionX= _initPositionX; }
+        public double getInitPositionY(){ return initPositionY; }
+        public void setInitPositionY(double _initPositionY){ initPositionY = _initPositionY; }
         public int getSpeed(){ return speed; }
         public void setSpeed(int _speed){ speed = _speed; }
         public boolean getClockWise(){ return clockwise; }
         public void setClockWise(boolean _clockwise){ clockwise = _clockwise; }
-        public double getDistance(){ return distance; }
-        public void setDistance(double _distance){ distance = _distance; }
     }
 
     public List<PlanetProperties> getPlanets(){

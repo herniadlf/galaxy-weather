@@ -1,6 +1,7 @@
 package model.galaxy;
 
 import model.galaxy.movement.OrbitalMovable;
+import model.galaxy.weather.GalaxyWeather;
 import model.galaxy.weather.traingularimpl.TriangleWeatherGuru;
 import model.galaxy.weather.WeatherGuru;
 
@@ -13,7 +14,9 @@ import java.util.*;
  * the interface that read the components position and provides info about the galaxy weather.
  */
 public class Galaxy {
+    public static final int FIRST_DAY_NUMBER = 1;
     private List<OrbitalComponent> components = null;
+    private List<GalaxyDay> days = null;
     private OrbitalCenter center = null;
     private WeatherGuru<?> weatherGuru = null;
 
@@ -28,6 +31,33 @@ public class Galaxy {
 
     public void newDay() {
         components.forEach(OrbitalMovable::move);
+        final GalaxyWeather newDayWeather = weatherGuru.calculateWeather();
+        final Integer lastDayNumber = days.get(days.size() - 1).getDayNumber();
+        days.add(new GalaxyDay(lastDayNumber+1, components, newDayWeather));
+    }
+
+    public GalaxyWeather getDayWeather(Integer day) {
+        GalaxyWeather weather = null;
+        for (final GalaxyDay galaxyDay : days) {
+            if (galaxyDay.getDayNumber().equals(day)){
+                weather = galaxyDay.getWeather();
+                break;
+            }
+        }
+        if (weather == null) throw new RuntimeException(String.format("Couldn't find weather for day %d", day));
+        return weather;
+    }
+
+    /**
+     * How many days got a weather like 'weather' param
+     */
+    public Integer getWeatherQuantities(GalaxyWeather weather) {
+        Integer quantity = 0;
+        for (final GalaxyDay galaxyDay : days) {
+            if (galaxyDay.getWeather() == weather)
+                quantity++;
+        }
+        return quantity;
     }
 
     public static class GalaxyBuilder {
@@ -52,7 +82,15 @@ public class Galaxy {
             galaxy.components = new ArrayList<>(componentsBuilder);
             galaxy.center = centerBuilder;
             galaxy.weatherGuru = getWeatherGuru(galaxy.center, galaxy.components);
+            galaxy.days = getInitialDay(galaxy.weatherGuru, galaxy.components);
             return galaxy;
+        }
+
+        private static List<GalaxyDay> getInitialDay(WeatherGuru<?> weatherGuru, List<OrbitalComponent> components) {
+            final ArrayList<GalaxyDay> days = new ArrayList<>();
+            final GalaxyWeather initialWeather = weatherGuru.calculateWeather();
+            days.add(new GalaxyDay(FIRST_DAY_NUMBER, components, initialWeather));
+            return days;
         }
 
         private static WeatherGuru<?> getWeatherGuru(OrbitalCenter _center, List<OrbitalComponent> _components){

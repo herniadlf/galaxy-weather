@@ -37,4 +37,6 @@ public abstract class OrbitalComponent extends GalaxyComponent implements Orbita
         final Double newYPosition = Math.sin(angle) * radius;
         position = new GalaxyPosition(newXPosition, newYPosition);
     }
+
+    public abstract OrbitalComponent copy();
 }

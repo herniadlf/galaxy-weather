@@ -40,4 +40,11 @@ public class Planet extends OrbitalComponent {
         updatePosition(newAngle);
         return position;
     }
+
+    @Override
+    public OrbitalComponent copy() {
+        final GalaxyPosition newPosition = new GalaxyPosition(position.x, position.y);
+        final OrbitalSpeed newSpeed = new OrbitalSpeed(speed.orientation, speed.rate);
+        return new Planet(newPosition, newSpeed);
+    }
 }
