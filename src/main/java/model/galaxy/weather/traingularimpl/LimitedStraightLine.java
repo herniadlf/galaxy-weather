@@ -1,4 +1,4 @@
-package model.galaxy.weather.defaultimpl;
+package model.galaxy.weather.traingularimpl;
 
 import model.galaxy.movement.GalaxyPosition;
 

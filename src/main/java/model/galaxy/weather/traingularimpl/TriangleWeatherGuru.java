@@ -1,4 +1,4 @@
-package model.galaxy.weather.defaultimpl;
+package model.galaxy.weather.traingularimpl;
 
 import model.galaxy.GalaxyComponent;
 import model.galaxy.OrbitalCenter;
@@ -11,17 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The DefaultWeatherGuru class is a implementation that solves the given exercise
+ * The TriangleWeatherGuru class is a implementation that solves the given exercise
  * It also serves as example for further implementations
  */
-public class DefaultWeatherGuru implements WeatherGuru<Triangle> {
+public class TriangleWeatherGuru implements WeatherGuru<Triangle> {
     final OrbitalCenter center;
     final List<OrbitalComponent> components;
 
-    public DefaultWeatherGuru(OrbitalCenter _center, List<OrbitalComponent> _components){
+    public TriangleWeatherGuru(OrbitalCenter _center, List<OrbitalComponent> _components){
         center = _center;
         if (_components.size() != 3){
-            throw new RuntimeException("DefaultWeatherGuru only supports 3 components");
+            throw new RuntimeException("TriangleWeatherGuru only supports 3 components");
         }
         components = new ArrayList<>(_components);
     }
@@ -59,5 +59,4 @@ public class DefaultWeatherGuru implements WeatherGuru<Triangle> {
                 components.get(1).getPosition(),
                 components.get(2).getPosition());
     }
-
 }

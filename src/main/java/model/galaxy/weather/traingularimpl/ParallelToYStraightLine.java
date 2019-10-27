@@ -1,4 +1,4 @@
-package model.galaxy.weather.defaultimpl;
+package model.galaxy.weather.traingularimpl;
 
 import model.galaxy.movement.GalaxyPosition;
 
@@ -13,7 +13,7 @@ public class ParallelToYStraightLine extends StraightLine{
     }
 
     @Override
-    protected Boolean contains(@NotNull GalaxyPosition point) {
+    public Boolean contains(@NotNull GalaxyPosition point) {
         return xPosition.equals(point.x);
     }
 }

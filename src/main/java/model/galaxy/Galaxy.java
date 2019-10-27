@@ -1,12 +1,11 @@
 package model.galaxy;
 
 import model.galaxy.movement.OrbitalMovable;
-import model.galaxy.weather.defaultimpl.DefaultWeatherGuru;
+import model.galaxy.weather.traingularimpl.TriangleWeatherGuru;
 import model.galaxy.weather.WeatherGuru;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Galaxy Class contains a center and orbital components around it
@@ -52,8 +51,14 @@ public class Galaxy {
             final Galaxy galaxy = new Galaxy();
             galaxy.components = new ArrayList<>(componentsBuilder);
             galaxy.center = centerBuilder;
-            galaxy.weatherGuru = new DefaultWeatherGuru(galaxy.center, galaxy.components);
+            galaxy.weatherGuru = getWeatherGuru(galaxy.center, galaxy.components);
             return galaxy;
+        }
+
+        private static WeatherGuru<?> getWeatherGuru(OrbitalCenter _center, List<OrbitalComponent> _components){
+            if (_components.size() == 3) return new TriangleWeatherGuru(_center, _components);
+            final String error = String.format("No WeatherGuru implementations for %d components", _components.size());
+            throw new RuntimeException(error);
         }
     }
 }
