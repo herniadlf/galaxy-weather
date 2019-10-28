@@ -16,6 +16,7 @@ import java.util.List;
 public class TriangleWeatherGuruTest {
 
     private Planet planet1 = null;
+    private final OrbitalCenter center = new OrbitalCenter();
     private Planet planet2 = null;
     private Planet planet3 = null;
     private final List<OrbitalComponent> components = new ArrayList<OrbitalComponent>();
@@ -118,69 +119,84 @@ public class TriangleWeatherGuruTest {
 
     @Test public void allAllignedInYAxisTest(){
         final TriangleWeatherGuru guru = createGuru1();
-        Assert.assertEquals(true, guru.allAligned());
+        final List<GalaxyPosition> pos = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(true, guru.centerAndComponentsAlligned(center.getPosition(), pos));
     }
 
     @Test public void allignedComponentssInYAxisTest(){
         final TriangleWeatherGuru guru = createGuru1();
-        Assert.assertEquals(true, guru.componentsAlligned());
+        final List<GalaxyPosition> pos = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(true, guru.onlyComponentsAlligned(pos));
     }
 
     @Test public void allAllignedInYAxisMoveTest(){
         final TriangleWeatherGuru guru = createGuru1();
         components.forEach(OrbitalComponent::move);
-        Assert.assertEquals(true, guru.allAligned());
+        final List<GalaxyPosition> pos = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(true, guru.centerAndComponentsAlligned(center.getPosition(), pos));
     }
 
     @Test public void allignedComponentsInYAxisMoveTest(){
         final TriangleWeatherGuru guru = createGuru1();
         components.forEach(OrbitalComponent::move);
-        Assert.assertEquals(true, guru.componentsAlligned());
+        final List<GalaxyPosition> pos = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(true, guru.onlyComponentsAlligned(pos));
     }
 
     @Test public void allAllignedInXAxisTest(){
         final TriangleWeatherGuru guru = createGuru2();
-        Assert.assertEquals(true, guru.allAligned());
+        final List<GalaxyPosition> pos = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(true, guru.centerAndComponentsAlligned(center.getPosition(), pos));
     }
 
     @Test public void allignedComponentsInXAxisTest(){
         final TriangleWeatherGuru guru = createGuru2();
-        Assert.assertEquals(true, guru.componentsAlligned());
+        final List<GalaxyPosition> pos = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(true, guru.onlyComponentsAlligned(pos));
     }
 
     @Test public void allAllignedInXAxisMoveTest(){
         final TriangleWeatherGuru guru = createGuru2();
         components.forEach(OrbitalComponent::move);
-        Assert.assertEquals(true, guru.allAligned());
+        final List<GalaxyPosition> pos = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(true, guru.centerAndComponentsAlligned(center.getPosition(), pos));
     }
 
     @Test public void allignedComponentsInXAxisMoveTest(){
         final TriangleWeatherGuru guru = createGuru2();
         components.forEach(OrbitalComponent::move);
-        Assert.assertEquals(true, guru.componentsAlligned());
+        final List<GalaxyPosition> pos = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(true, guru.onlyComponentsAlligned(pos));
     }
 
     @Test public void allAllignedWithDiffrentSpeedTest(){
         final TriangleWeatherGuru guru = createGuru3();
-        Assert.assertEquals(true, guru.allAligned());
+        final List<GalaxyPosition> pos = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(true, guru.centerAndComponentsAlligned(center.getPosition(), pos));
         components.forEach(OrbitalComponent::move);
-        Assert.assertEquals(false, guru.allAligned());
+        final List<GalaxyPosition> newPos = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(false, guru.centerAndComponentsAlligned(center.getPosition(), newPos));
     }
 
     @Test public void allignedComponentsWithDiffrentSpeedTest(){
         final TriangleWeatherGuru guru = createGuru3();
-        Assert.assertEquals(true, guru.componentsAlligned());
+        final List<GalaxyPosition> pos = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(true, guru.onlyComponentsAlligned(pos));
         components.forEach(OrbitalComponent::move);
-        Assert.assertEquals(false, guru.componentsAlligned());
+        final List<GalaxyPosition> newPos = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(false, guru.onlyComponentsAlligned(newPos));
     }
 
     @Test public void surroundedCenterTest(){
         final TriangleWeatherGuru guru = createGuru4();
-        Assert.assertEquals(false, guru.centerIsSurrounded());
+        final List<GalaxyPosition> pos = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(false, guru.centerIsSurrounded(center.getPosition(), pos));
         components.forEach(OrbitalComponent::move);
-        Assert.assertEquals(true, guru.centerIsSurrounded());
+        final List<GalaxyPosition> pos2 = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(true, guru.centerIsSurrounded(center.getPosition(), pos2));
         components.forEach(OrbitalComponent::move);
-        Assert.assertEquals(true, guru.centerIsSurrounded());
+        final List<GalaxyPosition> pos3 = TriangleWeatherGuru.getComponentsPosition(guru.components);
+        Assert.assertEquals(true, guru.centerIsSurrounded(center.getPosition(), pos3));
     }
 
     @Test public void allignedWithCenterMeansDroughtWeatherTest(){

@@ -12,8 +12,7 @@ public class ParallelToYStraightLine extends StraightLine{
         xPosition = _xPosition;
     }
 
-    @Override
-    public Boolean contains(@NotNull GalaxyPosition point) {
+    @Override public boolean contains(@NotNull GalaxyPosition point) {
         return xPosition.equals(point.x);
     }
 }

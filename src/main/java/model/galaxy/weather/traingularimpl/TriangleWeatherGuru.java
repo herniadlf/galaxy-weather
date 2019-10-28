@@ -9,6 +9,7 @@ import model.galaxy.weather.WeatherGuru;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The TriangleWeatherGuru class is a implementation that solves the given exercise
@@ -26,37 +27,37 @@ public class TriangleWeatherGuru implements WeatherGuru<Triangle> {
         components = new ArrayList<>(_components);
     }
 
+    public static List<GalaxyPosition> getComponentsPosition(List<OrbitalComponent> components){
+        return components.stream().map(GalaxyComponent::getPosition).collect(Collectors.toList());
+    }
+
     public GalaxyWeather calculateWeather(){
-        if (allAligned()) return GalaxyWeather.DROUGHT;
-        if (componentsAlligned()) return GalaxyWeather.OPTIMUM;
-        if (centerIsSurrounded()) return GalaxyWeather.RAINY;
+        final List<GalaxyPosition> componentsPosition = getComponentsPosition(components);
+        if (centerAndComponentsAlligned(center.getPosition(), componentsPosition)) return GalaxyWeather.DROUGHT;
+        if (onlyComponentsAlligned(componentsPosition)) return GalaxyWeather.OPTIMUM;
+        if (centerIsSurrounded(center.getPosition(), componentsPosition)) return GalaxyWeather.RAINY;
         return GalaxyWeather.NORMAL;
     }
 
-    public Boolean allAligned(){
-        final GalaxyPosition pos1 = center.getPosition();
-        final GalaxyPosition pos2 = components.get(0).getPosition();
-        final StraightLine line = StraightLine.buildLine(pos1, pos2);
-        return line.contains(components.get(1).getPosition(), components.get(2).getPosition());
+    @Override
+    public Boolean centerAndComponentsAlligned(GalaxyPosition _center, List<GalaxyPosition> _components){
+        final GalaxyPosition pos = _components.get(0);
+        final StraightLine line = StraightLine.buildLine(_center, pos);
+        return line.contains(_components.get(1), _components.get(2));
     }
 
-    public Boolean componentsAlligned(){
+    @Override
+    public Boolean onlyComponentsAlligned(List<GalaxyPosition> componentPosition){
         final GalaxyPosition pos1 = components.get(0).getPosition();
         final GalaxyPosition pos2 = components.get(1).getPosition();
         final StraightLine line = StraightLine.buildLine(pos1, pos2);
         return line.contains(components.get(2).getPosition());
     }
 
-    public Boolean centerIsSurrounded(){
-        if (componentsAlligned()) return false;
-        final Triangle triangle = buildFigure(components.get(0), components.get(1), components.get(2));
-        return triangle.contains(center.getPosition());
-    }
-
     @Override
-    public Triangle buildFigure(GalaxyComponent... _components) {
-        return Triangle.buildTriangleWithPoints(components.get(0).getPosition(),
-                components.get(1).getPosition(),
-                components.get(2).getPosition());
+    public Triangle buildGalaxyContainer(List<GalaxyPosition> componentPosition) {
+        return Triangle.buildTriangleWithPoints(componentPosition.get(0),
+                                                componentPosition.get(1),
+                                                componentPosition.get(2));
     }
 }

@@ -2,11 +2,12 @@ package model.galaxy.weather.traingularimpl;
 
 import model.galaxy.Orientation;
 import model.galaxy.movement.GalaxyPosition;
+import model.galaxy.weather.GalaxyContainer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Triangle {
+public class Triangle implements GalaxyContainer {
     final List<LimitedStraightLine> lines = new ArrayList<>();
     final List<GalaxyPosition> points = new ArrayList<>();
 
@@ -56,7 +57,7 @@ public class Triangle {
      * (B -> C -> POINT) triangle orientation
      * (C -> A -> POINT) triangle orientation
      */
-    protected Boolean contains(GalaxyPosition otherPoint){
+    @Override public boolean contains(GalaxyPosition otherPoint){
         if (borderContains(otherPoint)) return true;
         final ArrayList<Triangle> triangles = new ArrayList<>();
         triangles.add(buildTriangleWithPoints(points.get(0), points.get(1), otherPoint));

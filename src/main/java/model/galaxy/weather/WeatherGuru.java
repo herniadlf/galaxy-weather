@@ -1,15 +1,22 @@
 package model.galaxy.weather;
 
-import model.galaxy.GalaxyComponent;
+import model.galaxy.movement.GalaxyPosition;
 
-public interface WeatherGuru<T> {
+import java.util.List;
+
+public interface WeatherGuru<T extends GalaxyContainer> {
+
     GalaxyWeather calculateWeather();
 
-    Boolean allAligned();
+    Boolean centerAndComponentsAlligned(GalaxyPosition center, List<GalaxyPosition> componentsPosition);
 
-    Boolean componentsAlligned();
+    Boolean onlyComponentsAlligned(List<GalaxyPosition> components);
 
-    Boolean centerIsSurrounded();
+    default Boolean centerIsSurrounded(GalaxyPosition center, List<GalaxyPosition> components){
+        if (onlyComponentsAlligned(components)) return false;
+        final T figure = buildGalaxyContainer(components);
+        return figure.contains(center);
+    }
 
-    T buildFigure(GalaxyComponent... components);
+    T buildGalaxyContainer(List <GalaxyPosition> componentsPosition);
 }

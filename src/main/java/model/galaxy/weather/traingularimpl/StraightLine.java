@@ -1,10 +1,11 @@
 package model.galaxy.weather.traingularimpl;
 
 import model.galaxy.movement.GalaxyPosition;
+import model.galaxy.weather.GalaxyContainer;
 
 import javax.validation.constraints.NotNull;
 
-public class StraightLine {
+public class StraightLine implements GalaxyContainer {
     final Double slope;
     final Double intercept;
 
@@ -43,7 +44,7 @@ public class StraightLine {
     /**
      * @return we try to solve the ecuation to check if the line contains the point
      */
-    protected Boolean contains(@NotNull GalaxyPosition point) {
+    public boolean contains(@NotNull GalaxyPosition point) {
         final Double y = point.y;
         final double lineResult = (slope * point.x) + intercept;
         return y.equals(lineResult);
