@@ -1,6 +1,7 @@
 package application.persistance.service;
 
 import application.persistance.GalaxyComponentTable;
+import application.persistance.GalaxyDayComponentPositionPK;
 import application.persistance.GalaxyDayComponentPositionTable;
 import application.persistance.repository.GalaxyDayComponentPositionRepository;
 import model.galaxy.GalaxyComponent;
@@ -14,10 +15,13 @@ import java.util.List;
 public class GalaxyDayComponentPositionService {
 
     private final GalaxyDayComponentPositionRepository galaxyDayComponentPositionRepository;
+    private final GalaxyComponentService galaxyComponentService;
 
     @Autowired
-    public GalaxyDayComponentPositionService(GalaxyDayComponentPositionRepository galaxyDayComponentPositionRepository) {
+    public GalaxyDayComponentPositionService(GalaxyDayComponentPositionRepository galaxyDayComponentPositionRepository,
+                                             GalaxyComponentService galaxyComponentService) {
         this.galaxyDayComponentPositionRepository = galaxyDayComponentPositionRepository;
+        this.galaxyComponentService = galaxyComponentService;
     }
 
     @Transactional
@@ -25,11 +29,19 @@ public class GalaxyDayComponentPositionService {
         return galaxyDayComponentPositionRepository.findAll();
     }
 
-//    public static GalaxyDayComponentPositionTable fromComponent(GalaxyComponent component){
-//        final GalaxyDayComponentPositionTable instance = new GalaxyDayComponentPositionTable();
-//        GalaxyComponentTable component = GalaxyComponentService.fromComponent(component);
-//        instance.setPositionX(component.getPosition().x);
-//        instance.setPositionY(component.getPosition().y);
-//        instance.
-//    }
+    @Transactional
+    public GalaxyDayComponentPositionTable create(GalaxyDayComponentPositionPK pk, GalaxyComponent component) {
+        return galaxyDayComponentPositionRepository.save(fromComponentPosition(pk, component));
+    }
+
+    public GalaxyDayComponentPositionTable fromComponentPosition(GalaxyDayComponentPositionPK pk,
+                                                                        GalaxyComponent component){
+        final GalaxyDayComponentPositionTable instance = new GalaxyDayComponentPositionTable();
+        final GalaxyComponentTable persistedComponent = galaxyComponentService.create(component);
+        pk.setGalaxyComponent(persistedComponent);
+        instance.setGalaxyDayComponentPositionPK(pk);
+        instance.setPositionX(component.getPosition().x);
+        instance.setPositionY(component.getPosition().y);
+        return instance;
+    }
 }

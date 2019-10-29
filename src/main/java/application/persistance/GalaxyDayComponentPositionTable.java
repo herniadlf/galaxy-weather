@@ -30,4 +30,12 @@ public class GalaxyDayComponentPositionTable implements Serializable {
     public void setPositionY(Double positionY) {
         this.positionY = positionY;
     }
+
+    public GalaxyDayComponentPositionPK getGalaxyDayComponentPositionPK() {
+        return galaxyDayComponentPositionPK;
+    }
+
+    public void setGalaxyDayComponentPositionPK(GalaxyDayComponentPositionPK galaxyDayComponentPositionPK) {
+        this.galaxyDayComponentPositionPK = galaxyDayComponentPositionPK;
+    }
 }

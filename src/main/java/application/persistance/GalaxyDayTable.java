@@ -36,4 +36,12 @@ public class GalaxyDayTable {
     public void setGalaxyDayPk(GalaxyDayPK galaxyDayPk) {
         this.galaxyDayPk = galaxyDayPk;
     }
+
+    public List<GalaxyDayComponentPositionTable> getGalaxyDayComponentPositions() {
+        return galaxyDayComponentPositions;
+    }
+
+    public void setGalaxyDayComponentPositions(List<GalaxyDayComponentPositionTable> galaxyDayComponentPositions) {
+        this.galaxyDayComponentPositions = galaxyDayComponentPositions;
+    }
 }

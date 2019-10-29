@@ -48,7 +48,6 @@ public class GalaxyService {
             days.add(persistedDay);
         });
         createdInstance.setGalaxyDays(days);
-//        createdInstance.setGalaxyDayComponentPositions(new ArrayList<>());
         return createdInstance;
     }
 }

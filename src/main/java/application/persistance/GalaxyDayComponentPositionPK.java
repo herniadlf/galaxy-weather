@@ -21,4 +21,20 @@ public class GalaxyDayComponentPositionPK implements Serializable {
     @ManyToOne
     @JoinColumn(name="GALAXY_COMPONENT_ID", referencedColumnName="ID")
     private GalaxyComponentTable galaxyComponent;
+
+    public GalaxyDayTable getGalaxyDay() {
+        return galaxyDay;
+    }
+
+    public void setGalaxyDay(GalaxyDayTable galaxyDay) {
+        this.galaxyDay = galaxyDay;
+    }
+
+    public GalaxyComponentTable getGalaxyComponent() {
+        return galaxyComponent;
+    }
+
+    public void setGalaxyComponent(GalaxyComponentTable galaxyComponent) {
+        this.galaxyComponent = galaxyComponent;
+    }
 }
