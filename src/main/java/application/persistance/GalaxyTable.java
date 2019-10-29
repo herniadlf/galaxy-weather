@@ -19,9 +19,6 @@ public class GalaxyTable implements Serializable {
     @OneToMany(mappedBy = "galaxyDayPk.galaxy")
     private List<GalaxyDayTable> galaxyDays;
 
-    @OneToMany(mappedBy = "galaxyDayComponentPositionPK.galaxy")
-    private List<GalaxyDayComponentPositionTable> galaxyDayComponentPositions;
-
     public String getWeatherGuruCode() {
         return weatherGuruCode;
     }
@@ -38,11 +35,7 @@ public class GalaxyTable implements Serializable {
         this.galaxyDays = galaxyDays;
     }
 
-    public List<GalaxyDayComponentPositionTable> getGalaxyDayComponentPositions() {
-        return galaxyDayComponentPositions;
-    }
-
-    public void setGalaxyDayComponentPositions(List<GalaxyDayComponentPositionTable> galaxyDayComponentPositions) {
-        this.galaxyDayComponentPositions = galaxyDayComponentPositions;
+    public long getId() {
+        return id;
     }
 }

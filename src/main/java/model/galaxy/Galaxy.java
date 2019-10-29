@@ -25,6 +25,9 @@ public class Galaxy {
     public OrbitalCenter getCenter() {
         return center;
     }
+    public List<GalaxyDay> getDays() {
+        return days;
+    }
     public List<OrbitalComponent> getComponents() {
         return components;
     }

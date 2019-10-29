@@ -11,22 +11,11 @@ public class GalaxyDayTable {
     @EmbeddedId
     private GalaxyDayPK galaxyDayPk;
 
-    @Column(name = "NUMBER", nullable = false)
-    private Integer dayNumber;
-
     @Column(name = "WEATHER", nullable = false)
     private String galaxyWeatherStr;
 
     @OneToMany(mappedBy = "galaxyDayComponentPositionPK.galaxyDay")
     private List<GalaxyDayComponentPositionTable> galaxyDayComponentPositions;
-
-    public Integer getDayNumber() {
-        return dayNumber;
-    }
-
-    public void setDayNumber(Integer dayNumber) {
-        this.dayNumber = dayNumber;
-    }
 
     public GalaxyWeather getGalaxyWeather() {
         return GalaxyWeather.valueOf(galaxyWeatherStr);
@@ -40,11 +29,11 @@ public class GalaxyDayTable {
         galaxyWeatherStr = galaxyWeather.name();
     }
 
-    public List<GalaxyDayComponentPositionTable> getGalaxyDayComponentPositions() {
-        return galaxyDayComponentPositions;
+    public GalaxyDayPK getGalaxyDayPk() {
+        return galaxyDayPk;
     }
 
-    public void setGalaxyDayComponentPositions(List<GalaxyDayComponentPositionTable> galaxyDayComponentPositions) {
-        this.galaxyDayComponentPositions = galaxyDayComponentPositions;
+    public void setGalaxyDayPk(GalaxyDayPK galaxyDayPk) {
+        this.galaxyDayPk = galaxyDayPk;
     }
 }

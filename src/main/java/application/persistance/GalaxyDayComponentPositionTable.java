@@ -10,10 +10,6 @@ public class GalaxyDayComponentPositionTable implements Serializable {
     @EmbeddedId
     private GalaxyDayComponentPositionPK galaxyDayComponentPositionPK;
 
-//    @OneToOne
-//    @JoinColumn(name="GALAXY_COMPONENT_ID", referencedColumnName="ID")
-//    private GalaxyComponentTable galaxyComponentId;
-
     @Column(name="POSITION_X", nullable = false)
     private Double positionX;
     @Column(name="POSITION_Y", nullable = false)

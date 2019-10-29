@@ -20,15 +20,15 @@ public class GalaxyDay {
         weather = _weather;
     }
 
-    protected Integer getDayNumber(){
+    public Integer getDayNumber(){
         return dayNumber;
     }
 
-    protected List<OrbitalComponent> getComponents(){
+    public List<OrbitalComponent> getComponents(){
         return components;
     }
 
-    protected GalaxyWeather getWeather(){
+    public GalaxyWeather getWeather(){
         return weather;
     }
 }
