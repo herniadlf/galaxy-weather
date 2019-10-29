@@ -1,10 +1,9 @@
-package persistance;
+package application.persistance;
 
 
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import java.io.Serializable;
 
 @Embeddable

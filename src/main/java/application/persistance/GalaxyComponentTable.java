@@ -1,6 +1,4 @@
-package persistance;
-
-import model.galaxy.weather.GalaxyWeather;
+package application.persistance;
 
 import javax.persistence.*;
 

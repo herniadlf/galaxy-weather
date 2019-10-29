@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  * It also serves as example for further implementations
  */
 public class TriangleWeatherGuru implements WeatherGuru<Triangle> {
+    public static final String TRIANGLE_IMPL_CODE = "TR_WG";
     final OrbitalCenter center;
     final List<OrbitalComponent> components;
 
@@ -29,6 +30,11 @@ public class TriangleWeatherGuru implements WeatherGuru<Triangle> {
 
     public static List<GalaxyPosition> getComponentsPosition(List<OrbitalComponent> components){
         return components.stream().map(GalaxyComponent::getPosition).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getCode() {
+        return TRIANGLE_IMPL_CODE;
     }
 
     public GalaxyWeather calculateWeather(){

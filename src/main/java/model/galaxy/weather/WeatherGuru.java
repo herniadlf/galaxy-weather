@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface WeatherGuru<T extends GalaxyContainer> {
 
+    String getCode();
+
     GalaxyWeather calculateWeather();
 
     Boolean centerAndComponentsAlligned(GalaxyPosition center, List<GalaxyPosition> componentsPosition);

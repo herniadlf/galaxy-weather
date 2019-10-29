@@ -29,6 +29,10 @@ public class Galaxy {
         return components;
     }
 
+    public String getWeatherGuruCode(){
+        return weatherGuru.getCode();
+    }
+
     public void newDay() {
         components.forEach(OrbitalMovable::move);
         final GalaxyWeather newDayWeather = weatherGuru.calculateWeather();
