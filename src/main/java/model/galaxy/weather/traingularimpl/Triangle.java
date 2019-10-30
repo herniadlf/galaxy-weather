@@ -32,7 +32,7 @@ public class Triangle implements GalaxyContainer {
             points.add(line2.pos1);
     }
 
-    Double getPerimeter(){
+    public Double getPerimeter(){
         return lines.stream().map(LimitedStraightLine::getDistance)
                 .reduce(0.0, (acc, distance) -> acc+distance);
     }

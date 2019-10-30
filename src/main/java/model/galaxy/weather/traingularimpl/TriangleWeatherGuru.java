@@ -11,12 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static model.galaxy.weather.GalaxyWeather.TYPE.*;
+
 /**
  * The TriangleWeatherGuru class is a implementation that solves the given exercise
  * It also serves as example for further implementations
  */
 public class TriangleWeatherGuru implements WeatherGuru<Triangle> {
     public static final String TRIANGLE_IMPL_CODE = "TR_WG";
+    public static final String INTENSITY_DETAIL = "INTENSITY";
     final OrbitalCenter center;
     final List<OrbitalComponent> components;
 
@@ -39,10 +42,14 @@ public class TriangleWeatherGuru implements WeatherGuru<Triangle> {
 
     public GalaxyWeather calculateWeather(){
         final List<GalaxyPosition> componentsPosition = getComponentsPosition(components);
-        if (centerAndComponentsAlligned(center.getPosition(), componentsPosition)) return GalaxyWeather.DROUGHT;
-        if (onlyComponentsAlligned(componentsPosition)) return GalaxyWeather.OPTIMUM;
-        if (centerIsSurrounded(center.getPosition(), componentsPosition)) return GalaxyWeather.RAINY;
-        return GalaxyWeather.NORMAL;
+        if (centerAndComponentsAlligned(center.getPosition(), componentsPosition)) return new GalaxyWeather(DROUGHT);
+        if (onlyComponentsAlligned(componentsPosition)) return new GalaxyWeather(OPTIMUM);
+        if (centerIsSurrounded(center.getPosition(), componentsPosition)) {
+            final GalaxyWeather galaxyWeather = new GalaxyWeather(RAINY);
+            galaxyWeather.addDetail(getIntensityDetail());
+            return galaxyWeather;
+        }
+        return new GalaxyWeather(NORMAL);
     }
 
     @Override
@@ -65,5 +72,10 @@ public class TriangleWeatherGuru implements WeatherGuru<Triangle> {
         return Triangle.buildTriangleWithPoints(componentPosition.get(0),
                                                 componentPosition.get(1),
                                                 componentPosition.get(2));
+    }
+
+    private String getIntensityDetail() {
+        final Double perimeter = buildGalaxyContainer(getComponentsPosition(components)).getPerimeter();
+        return String.format("\"%s\" : %f", INTENSITY_DETAIL, perimeter);
     }
 }

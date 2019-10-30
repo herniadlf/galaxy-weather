@@ -8,14 +8,12 @@ import application.persistance.repository.GalaxyDayRepository;
 import model.galaxy.Galaxy;
 import model.galaxy.weather.GalaxyWeather;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.BasicJsonParser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class GalaxyDayService {
@@ -43,7 +41,8 @@ public class GalaxyDayService {
         galaxy.getDays().forEach(day -> {
             final GalaxyDayTable instance = new GalaxyDayTable();
             instance.setDayNumber(day.getDayNumber());
-            instance.setGalaxyWeather(day.getWeather().name());
+            instance.setGalaxyWeather(day.getWeather().getType().name());
+            instance.setGalaxyWeatherDetail(day.getWeather().getDetailsAsJson());
             final GalaxyDayTable createdInstance = galaxyDayRepository.save(instance);
             day.getComponents().forEach(comp -> {
                 final GalaxyDayComponentPositionPK componentPositionPK = new GalaxyDayComponentPositionPK();
@@ -72,8 +71,8 @@ public class GalaxyDayService {
      * How many days got a weather like 'weather' param
      */
     @Transactional
-    public Integer getWeatherQuantities(GalaxyWeather weather) {
-        return galaxyDayRepository.findAllByGalaxyWeather(weather.name()).size();
+    public List<GalaxyDayTable> getWeatherQuantities(GalaxyWeather.TYPE weather) {
+        return galaxyDayRepository.findAllByGalaxyWeather(weather.name());
     }
 
     @Transactional
@@ -81,5 +80,23 @@ public class GalaxyDayService {
         galaxyDayComponentPositionService.delete();
         galaxyComponentService.delete();
         galaxyDayRepository.deleteAll();
+    }
+
+    public GalaxyDayTable findGreaterByDetail(List<GalaxyDayTable> days, String detailKey) {
+        final HashMap<Double, GalaxyDayTable> map = new HashMap<>();
+        days.forEach(day -> {
+            final String detail = day.getGalaxyWeatherDetail();
+            final BasicJsonParser parser = new BasicJsonParser();
+            final Map<String, Object> detailMap = parser.parseMap(detail);
+            if (!detailMap.isEmpty()){
+                final Double detailValue = (Double) detailMap.get(detailKey);
+                map.put(detailValue, day);
+            }
+        });
+        if (map.isEmpty())
+            return null;
+        final Optional<Double> first = map.keySet().stream().max(Double::compareTo);
+        assert first.isPresent();
+        return map.get(first.get());
     }
 }

@@ -201,24 +201,24 @@ public class TriangleWeatherGuruTest {
 
     @Test public void allignedWithCenterMeansDroughtWeatherTest(){
         final TriangleWeatherGuru guru = createGuru1();
-        Assert.assertEquals(guru.calculateWeather(), GalaxyWeather.DROUGHT);
+        Assert.assertEquals(guru.calculateWeather().getType(), GalaxyWeather.TYPE.DROUGHT);
     }
 
     @Test public void allignedWithoutCenterMeansOptimumWeatherTest(){
         final TriangleWeatherGuru guru = createGuru5();
-        Assert.assertEquals(guru.calculateWeather(), GalaxyWeather.OPTIMUM);
+        Assert.assertEquals(guru.calculateWeather().getType(), GalaxyWeather.TYPE.OPTIMUM);
     }
 
     @Test public void surroundedCenterMeansRainyWeatherTest(){
         final TriangleWeatherGuru guru = createGuru4();
         components.forEach(OrbitalComponent::move);
-        Assert.assertEquals(guru.calculateWeather(), GalaxyWeather.RAINY);
+        Assert.assertEquals(guru.calculateWeather().getType(), GalaxyWeather.TYPE.RAINY);
     }
 
     @Test public void notAllignedAndNotSurroundedCenterMeansNormalWeatherTest(){
         final TriangleWeatherGuru guru = createGuru6();
         components.forEach(OrbitalComponent::move);
-        Assert.assertEquals(guru.calculateWeather(), GalaxyWeather.NORMAL);
+        Assert.assertEquals(guru.calculateWeather().getType(), GalaxyWeather.TYPE.NORMAL);
     }
 
 }

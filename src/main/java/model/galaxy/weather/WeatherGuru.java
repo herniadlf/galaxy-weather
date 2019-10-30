@@ -16,8 +16,8 @@ public interface WeatherGuru<T extends GalaxyContainer> {
 
     default Boolean centerIsSurrounded(GalaxyPosition center, List<GalaxyPosition> components){
         if (onlyComponentsAlligned(components)) return false;
-        final T figure = buildGalaxyContainer(components);
-        return figure.contains(center);
+        final T galaxyContainer = buildGalaxyContainer(components);
+        return galaxyContainer.contains(center);
     }
 
     T buildGalaxyContainer(List <GalaxyPosition> componentsPosition);

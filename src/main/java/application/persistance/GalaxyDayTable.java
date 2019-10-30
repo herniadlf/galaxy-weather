@@ -14,6 +14,9 @@ public class GalaxyDayTable {
     @Column(name = "WEATHER", nullable = false)
     private String galaxyWeather;
 
+    @Column(name = "WEATHER_DETAIL")
+    private String galaxyWeatherDetail;
+
     @OneToMany(mappedBy = "galaxyDayComponentPositionPK.galaxyDay")
     private List<GalaxyDayComponentPositionTable> galaxyDayComponentPositions;
 
@@ -39,5 +42,13 @@ public class GalaxyDayTable {
 
     public void setGalaxyDayComponentPositions(List<GalaxyDayComponentPositionTable> galaxyDayComponentPositions) {
         this.galaxyDayComponentPositions = galaxyDayComponentPositions;
+    }
+
+    public String getGalaxyWeatherDetail() {
+        return galaxyWeatherDetail;
+    }
+
+    public void setGalaxyWeatherDetail(String galaxyWeatherDetail) {
+        this.galaxyWeatherDetail = galaxyWeatherDetail;
     }
 }

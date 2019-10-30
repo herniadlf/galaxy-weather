@@ -17,7 +17,11 @@ import model.galaxy.weather.GalaxyWeather;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
@@ -79,7 +83,8 @@ public class GalaxyController {
         }
         final GalaxyDayTable galaxyDay = galaxyDayService.getDay(day);
         final String dayWeather = galaxyDay.getGalaxyWeather();
-        final GalaxyControllerResponse resp = new DayWeatherResponse(galaxyDay.getDayNumber(), dayWeather);
+        final String dayWeatherDetail= galaxyDay.getGalaxyWeatherDetail();
+        final GalaxyControllerResponse resp = new DayWeatherResponse(galaxyDay.getDayNumber(), dayWeather, dayWeatherDetail);
         return new ResponseEntity<>(resp, OK);
     }
 
@@ -89,15 +94,26 @@ public class GalaxyController {
     }
 
     @RequestMapping("/cantidad_de_periodos")
-    ResponseEntity<GalaxyControllerResponse> getWeatherQuantities(@RequestParam("tipo") GalaxyWeather weather) {
+    ResponseEntity<GalaxyControllerResponse> getWeatherQuantities(
+            @RequestParam("tipo") GalaxyWeather.TYPE weather,
+            @RequestParam(value = "detalle", required = false) String detailKey)
+    {
         // We look for galaxy configuration first or we fail
         final List<GalaxyWeatherGuruTable> galaxyWeatherGuru = galaxyWeatherGuruService.findGalaxyWeatherGuru();
         if (galaxyWeatherGuru.isEmpty()){
             final GalaxyControllerResponse resp = new GalaxyControllerResponse(MUST_POST_FIRST);
             return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
         }
-        final Integer responseQty = galaxyDayService.getWeatherQuantities(weather);
-        final PeriodWeatherResponse resp = new PeriodWeatherResponse(weather, responseQty);
+        final List<GalaxyDayTable> days = galaxyDayService.getWeatherQuantities(weather);
+        if (detailKey == null){
+            final PeriodWeatherResponse resp = new PeriodWeatherResponse(weather, days.size());
+            return new ResponseEntity<>(resp, OK);
+        }
+        final GalaxyDayTable greaterByDetail = galaxyDayService.findGreaterByDetail(days, detailKey);
+        final PeriodWeatherResponse resp = new PeriodWeatherDetailResponse(weather,
+                                                                            days.size(),
+                                                                            detailKey,
+                                                                            greaterByDetail);
         return new ResponseEntity<>(resp, OK);
     }
 
@@ -153,7 +169,7 @@ public class GalaxyController {
         private final Long day;
         private final String weather;
 
-        DayWeatherResponse(Long day, String weather){
+        DayWeatherResponse(Long day, String weather, String details){
             this.day = day;
             this.weather = weather;
         }
@@ -171,7 +187,7 @@ public class GalaxyController {
         private final String weather;
         private final Integer quantity;
 
-        PeriodWeatherResponse(GalaxyWeather weather, Integer quantity){
+        PeriodWeatherResponse(GalaxyWeather.TYPE weather, Integer quantity){
             this.weather = weather.name();
             this.quantity = quantity;
         }
@@ -185,12 +201,34 @@ public class GalaxyController {
         }
     }
 
-    private class WeatherTypesResponse extends GalaxyControllerResponse{
-        private final List<GalaxyWeather> types = new ArrayList<>();
-        WeatherTypesResponse(){
-            types.addAll(Arrays.asList(GalaxyWeather.values()));
+    private class PeriodWeatherDetailResponse extends PeriodWeatherResponse{
+        private final String detailKey;
+        private final String detailDay;
+
+        PeriodWeatherDetailResponse(GalaxyWeather.TYPE weather,
+                              Integer quantity,
+                              String detailKey,
+                              @Nullable GalaxyDayTable detailDay){
+            super(weather, quantity);
+            this.detailKey = detailKey;
+            this.detailDay = detailDay == null ? "" : String.valueOf(detailDay.getDayNumber());
         }
-        public List<GalaxyWeather> getTypes(){
+
+        public String getDetailKey() {
+            return detailKey;
+        }
+
+        public String getDetailValue() {
+            return detailDay;
+        }
+    }
+
+    private class WeatherTypesResponse extends GalaxyControllerResponse{
+        private final List<GalaxyWeather.TYPE> types = new ArrayList<>();
+        WeatherTypesResponse(){
+            types.addAll(Arrays.asList(GalaxyWeather.TYPE.values()));
+        }
+        public List<GalaxyWeather.TYPE> getTypes(){
             return types;
         }
     }
