@@ -30,4 +30,9 @@ public class GalaxyComponentService {
         instance.setName(component.getName());
         return instance;
     }
+
+    @Transactional
+    public void delete() {
+        galaxyComponentRepository.deleteAll();
+    }
 }

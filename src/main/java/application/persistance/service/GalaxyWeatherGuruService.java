@@ -35,4 +35,8 @@ public class GalaxyWeatherGuruService {
         instance.setWeatherGuruCode(galaxy.getWeatherGuruCode());
         return galaxyWeatherGuruRepository.save(instance);
     }
+
+    public void delete() {
+        galaxyWeatherGuruRepository.deleteAll();
+    }
 }

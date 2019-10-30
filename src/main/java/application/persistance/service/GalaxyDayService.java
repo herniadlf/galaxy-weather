@@ -9,6 +9,7 @@ import model.galaxy.Galaxy;
 import model.galaxy.weather.GalaxyWeather;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -55,10 +56,12 @@ public class GalaxyDayService {
         galaxyDayComponentPositionService.create(daysComponentPosToPersist);
     }
 
+    @Transactional
     public void create(Galaxy galaxy) {
         createFromGalaxy(galaxy);
     }
 
+    @Transactional
     public GalaxyDayTable getDay(@NotNull Long day) {
         final Optional<GalaxyDayTable> dayByPk = galaxyDayRepository.findById(day);
         if (!dayByPk.isPresent()) throw new RuntimeException("Unexistent day");
@@ -68,7 +71,15 @@ public class GalaxyDayService {
     /**
      * How many days got a weather like 'weather' param
      */
+    @Transactional
     public Integer getWeatherQuantities(GalaxyWeather weather) {
         return galaxyDayRepository.findAllByGalaxyWeather(weather.name()).size();
+    }
+
+    @Transactional
+    public void delete() {
+        galaxyDayComponentPositionService.delete();
+        galaxyComponentService.delete();
+        galaxyDayRepository.deleteAll();
     }
 }

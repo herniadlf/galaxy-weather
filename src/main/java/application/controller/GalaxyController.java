@@ -56,6 +56,17 @@ public class GalaxyController {
         return "ok";
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, value = "/")
+    public String delete(){
+        // We look for galaxy configuration first
+        final List<GalaxyWeatherGuruTable> galaxyWeatherGuru = galaxyWeatherGuruService.findGalaxyWeatherGuru();
+        if (galaxyWeatherGuru.isEmpty())
+            return "Nothing to delete";
+        galaxyDayService.delete();
+        galaxyWeatherGuruService.delete();
+        return "ok";
+    }
+
     @RequestMapping("/clima")
     String getWeatherByDay(@RequestParam("dia") Long day) {
         // We look for galaxy configuration first or we fail

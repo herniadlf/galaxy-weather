@@ -34,7 +34,13 @@ public class GalaxyDayComponentPositionService {
         return instance;
     }
 
+    @Transactional
     public List<GalaxyDayComponentPositionTable> create(List<GalaxyDayComponentPositionTable> components) {
         return galaxyDayComponentPositionRepository.saveAll(components);
+    }
+
+    @Transactional
+    public void delete() {
+        galaxyDayComponentPositionRepository.deleteAll();
     }
 }
