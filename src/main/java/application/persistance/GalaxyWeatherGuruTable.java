@@ -1,10 +1,12 @@
 package application.persistance;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "GALAXY_WEATHER_GURU")
-public class GalaxyWeatherGuruTable {
+public class GalaxyWeatherGuruTable implements Serializable {
+    private static final long serialVersionUID = 1467709095289601519L;
     @Id
     @GeneratedValue
     private Long id;

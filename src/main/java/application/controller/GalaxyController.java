@@ -15,20 +15,20 @@ import model.galaxy.movement.OrbitalSpeed;
 import model.galaxy.planet.Planet;
 import model.galaxy.weather.GalaxyWeather;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import java.util.*;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/galaxy")
 public class GalaxyController {
 
+    public static final String MUST_POST_FIRST = "Must call POST galaxyWeatherGuruService \"galaxy/\" first";
     private final GalaxyWeatherGuruService galaxyWeatherGuruService;
     private final GalaxyDayService galaxyDayService;
     private final GalaxyComponentService componentService;
@@ -49,57 +49,56 @@ public class GalaxyController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/")
-    public String create(){
+    public ResponseEntity<GalaxyControllerResponse> create(){
         final Galaxy galaxy = configureGalaxy();
         galaxyWeatherGuruService.create(galaxy);
         galaxyDayService.create(galaxy);
-        return "ok";
+        return new ResponseEntity<GalaxyControllerResponse>(OK);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/")
-    public String delete(){
+    public ResponseEntity<GalaxyControllerResponse> delete(){
         // We look for galaxy configuration first
         final List<GalaxyWeatherGuruTable> galaxyWeatherGuru = galaxyWeatherGuruService.findGalaxyWeatherGuru();
-        if (galaxyWeatherGuru.isEmpty())
-            return "Nothing to delete";
+        if (galaxyWeatherGuru.isEmpty()){
+            final GalaxyControllerResponse response = new GalaxyControllerResponse("Nothing to delete");
+            return new ResponseEntity<>(response, OK);
+        }
         galaxyDayService.delete();
         galaxyWeatherGuruService.delete();
-        return "ok";
+        return new ResponseEntity<>(OK);
     }
 
     @RequestMapping("/clima")
-    String getWeatherByDay(@RequestParam("dia") Long day) {
+    ResponseEntity<GalaxyControllerResponse> getWeatherByDay(@RequestParam("dia") Long day) {
         // We look for galaxy configuration first or we fail
         final List<GalaxyWeatherGuruTable> galaxyWeatherGuru = galaxyWeatherGuruService.findGalaxyWeatherGuru();
-        if (galaxyWeatherGuru.isEmpty())
-            return "Must call POST galaxyWeatherGuruService \"galaxy/\" first";
+        if (galaxyWeatherGuru.isEmpty()) {
+            final GalaxyControllerResponse resp = new GalaxyControllerResponse(MUST_POST_FIRST);
+            return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
+        }
         final GalaxyDayTable galaxyDay = galaxyDayService.getDay(day);
         final String dayWeather = galaxyDay.getGalaxyWeather();
-        return String.format("{ \"dia\": %d, \"clima\": \"%s\" }", day, dayWeather);
+        final GalaxyControllerResponse resp = new DayWeatherResponse(galaxyDay.getDayNumber(), dayWeather);
+        return new ResponseEntity<>(resp, OK);
     }
 
     @RequestMapping("/tipos_de_clima")
-    String getWeatherTypes() {
-        final StringBuilder responseBuilder = new StringBuilder("{ \"tipos_de_clima\" :");
-        final StringBuilder arrayBuilder = new StringBuilder("[ ");
-        for (final GalaxyWeather type : GalaxyWeather.values()) {
-            arrayBuilder.append(String.format(" \"%s\",", type));
-        }
-        String array = arrayBuilder.toString();
-        array = array.substring(0, array.length()-1);
-        responseBuilder.append(array);
-        responseBuilder.append("] }");
-        return responseBuilder.toString();
+    ResponseEntity<GalaxyControllerResponse> getWeatherTypes() {
+        return new ResponseEntity<>(new WeatherTypesResponse(), OK);
     }
 
     @RequestMapping("/cantidad_de_periodos")
-    String getWeatherQuantities(@RequestParam("tipo") GalaxyWeather weather) {
+    ResponseEntity<GalaxyControllerResponse> getWeatherQuantities(@RequestParam("tipo") GalaxyWeather weather) {
         // We look for galaxy configuration first or we fail
         final List<GalaxyWeatherGuruTable> galaxyWeatherGuru = galaxyWeatherGuruService.findGalaxyWeatherGuru();
-        if (galaxyWeatherGuru.isEmpty())
-            return "Must call POST galaxyWeatherGuruService \"galaxy/\" first";
+        if (galaxyWeatherGuru.isEmpty()){
+            final GalaxyControllerResponse resp = new GalaxyControllerResponse(MUST_POST_FIRST);
+            return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
+        }
         final Integer responseQty = galaxyDayService.getWeatherQuantities(weather);
-        return String.format("{ \"tipo\" : \"%s\", \"cantidad\": %d }", weather, responseQty);
+        final PeriodWeatherResponse resp = new PeriodWeatherResponse(weather, responseQty);
+        return new ResponseEntity<>(resp, OK);
     }
 
     private Galaxy configureGalaxy() {
@@ -136,4 +135,63 @@ public class GalaxyController {
         return galaxy;
     }
 
+    private class GalaxyControllerResponse {
+        private final String message;
+        GalaxyControllerResponse(){
+            message = "";
+        }
+        GalaxyControllerResponse(@NotNull String message){
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
+
+    private class DayWeatherResponse extends GalaxyControllerResponse{
+        private final Long day;
+        private final String weather;
+
+        DayWeatherResponse(Long day, String weather){
+            this.day = day;
+            this.weather = weather;
+        }
+
+        public Long getDay() {
+            return day;
+        }
+
+        public String getWeather() {
+            return weather;
+        }
+    }
+
+    private class PeriodWeatherResponse extends GalaxyControllerResponse{
+        private final String weather;
+        private final Integer quantity;
+
+        PeriodWeatherResponse(GalaxyWeather weather, Integer quantity){
+            this.weather = weather.name();
+            this.quantity = quantity;
+        }
+
+        public String getWeather() {
+            return weather;
+        }
+
+        public Integer getQuantity() {
+            return quantity;
+        }
+    }
+
+    private class WeatherTypesResponse extends GalaxyControllerResponse{
+        private final List<GalaxyWeather> types = new ArrayList<>();
+        WeatherTypesResponse(){
+            types.addAll(Arrays.asList(GalaxyWeather.values()));
+        }
+        public List<GalaxyWeather> getTypes(){
+            return types;
+        }
+    }
 }
