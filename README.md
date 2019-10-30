@@ -110,7 +110,7 @@ y OPTIMUM (clima óptimo de presión y temperatura).
 - GET -> ``https://galaxyweather-hdlf.herokuapp.com/galaxy/cantidad_de_periodos?tipo=RAINY&detalle=INTENSITY`` : 
 Devuelve la cantidad de días en los que el clima fue del **tipo** pasado por parámetro. 
 A su vez, es opcional el parámetro **detalle**.
-En este caso, se consulta por días donde el clima fue lluvioso y se quieren saber los detalles.
+En este caso, se consulta por días donde el clima fue lluvioso y se devuelve como detalle cuál fue el día de mayor intensidad.
 - POST ->  ``https://galaxyweather-hdlf.herokuapp.com/galaxy/`` : Inicializa la base de datos con los cálculos de clima.
 - DELETE ->  ``https://galaxyweather-hdlf.herokuapp.com/galaxy/`` : Elimina la información guardada en la base de datos.
 
