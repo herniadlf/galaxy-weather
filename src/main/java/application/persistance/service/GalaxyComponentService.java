@@ -25,8 +25,11 @@ public class GalaxyComponentService {
     }
 
     @Transactional
-    public GalaxyComponentTable create(GalaxyComponent component) {
-        return galaxyComponentRepository.save(fromComponent(component));
+    public GalaxyComponentTable findOrCreate(GalaxyComponent component) {
+        final GalaxyComponentTable byName = galaxyComponentRepository.findByName(component.getName());
+        if (byName == null)
+            return galaxyComponentRepository.save(fromComponent(component));
+        return byName;
     }
 
     public static GalaxyComponentTable fromComponent(GalaxyComponent component){

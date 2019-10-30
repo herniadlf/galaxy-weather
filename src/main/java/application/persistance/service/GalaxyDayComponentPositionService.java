@@ -9,19 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
 public class GalaxyDayComponentPositionService {
 
     private final GalaxyDayComponentPositionRepository galaxyDayComponentPositionRepository;
-    private final GalaxyComponentService galaxyComponentService;
 
     @Autowired
-    public GalaxyDayComponentPositionService(GalaxyDayComponentPositionRepository galaxyDayComponentPositionRepository,
-                                             GalaxyComponentService galaxyComponentService) {
+    public GalaxyDayComponentPositionService(GalaxyDayComponentPositionRepository galaxyDayComponentPositionRepository) {
         this.galaxyDayComponentPositionRepository = galaxyDayComponentPositionRepository;
-        this.galaxyComponentService = galaxyComponentService;
     }
 
     @Transactional
@@ -30,14 +28,17 @@ public class GalaxyDayComponentPositionService {
     }
 
     @Transactional
-    public GalaxyDayComponentPositionTable create(GalaxyDayComponentPositionPK pk, GalaxyComponent component) {
-        return galaxyDayComponentPositionRepository.save(fromComponentPosition(pk, component));
+    public GalaxyDayComponentPositionTable create(GalaxyDayComponentPositionPK pk,
+                                                  GalaxyComponent component,
+                                                  HashMap<String, GalaxyComponentTable> persistedComponents) {
+        return galaxyDayComponentPositionRepository.save(fromComponentPosition(pk, component, persistedComponents));
     }
 
     public GalaxyDayComponentPositionTable fromComponentPosition(GalaxyDayComponentPositionPK pk,
-                                                                        GalaxyComponent component){
+                                                                 GalaxyComponent component,
+                                                                 HashMap<String, GalaxyComponentTable> persistedComponents){
         final GalaxyDayComponentPositionTable instance = new GalaxyDayComponentPositionTable();
-        final GalaxyComponentTable persistedComponent = galaxyComponentService.create(component);
+        final GalaxyComponentTable persistedComponent = persistedComponents.get(component.getName());
         pk.setGalaxyComponent(persistedComponent);
         instance.setGalaxyDayComponentPositionPK(pk);
         instance.setPositionX(component.getPosition().x);

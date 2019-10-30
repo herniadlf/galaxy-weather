@@ -19,13 +19,17 @@ public abstract class OrbitalComponent extends GalaxyComponent implements Orbita
      * If X and Y position are both 0, it means no distance from center.
      * We have to fail otherwise the Math Op's will fail at some point
      */
-    protected OrbitalComponent(GalaxyPosition initPosition){
-        super(initPosition);
+    protected OrbitalComponent(String name, GalaxyPosition initPosition){
+        super(name, initPosition);
         if (initPosition.x == 0 && initPosition.y == 0) {
             throw new OrbitalComponentException("Orbital position cannot be (0,0)");
         }
         radius = Math.hypot(position.x, position.y);
         angle = Math.asin(position.y / radius);
+    }
+
+    protected OrbitalComponent(GalaxyPosition initPosition){
+        this("", initPosition);
     }
 
     /**

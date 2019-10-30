@@ -1,5 +1,6 @@
 package application.controller;
 
+import application.GalaxyProperties;
 import application.persistance.service.GalaxyService;
 import model.galaxy.Galaxy;
 import model.galaxy.OrbitalCenter;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -80,13 +83,24 @@ public class GalaxyController {
             final Orientation orientation = planetProp.getClockWise() ? Orientation.CLOCKWISE :
                                                                         Orientation.COUNTER_CLOCKWISE;
             final int speedRate = planetProp.getSpeed();
+            final String name = planetProp.getName();
             final OrbitalSpeed planetSpeed = new OrbitalSpeed(orientation, speedRate);
-            final Planet planet = new Planet(initPos, planetSpeed);
+            final Planet planet = new Planet(name, initPos, planetSpeed);
             planets.add(planet);
         });
         final Galaxy galaxy = builder.withComponents(planets).create();
-        for (int i=1; i < 3650; i++){
+
+        Date date = new Date();
+        final Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.YEAR, galaxyProperties.getYears());
+        final Date endDate = c.getTime();
+
+        c.setTime(date);
+        while (date.before(endDate)){
             galaxy.newDay();
+            c.add(Calendar.DAY_OF_YEAR, 1);
+            date = c.getTime();
         }
         return galaxy;
     }

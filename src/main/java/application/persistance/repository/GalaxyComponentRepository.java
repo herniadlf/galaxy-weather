@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GalaxyComponentRepository extends JpaRepository<GalaxyComponentTable, Long> {
 
+    GalaxyComponentTable findByName(String name);
 }

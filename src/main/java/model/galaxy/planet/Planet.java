@@ -2,9 +2,8 @@ package model.galaxy.planet;
 
 
 import model.galaxy.OrbitalComponent;
-import model.galaxy.OrbitalComponentException;
-import model.galaxy.movement.OrbitalSpeed;
 import model.galaxy.movement.GalaxyPosition;
+import model.galaxy.movement.OrbitalSpeed;
 
 import javax.validation.constraints.NotNull;
 
@@ -13,6 +12,10 @@ public class Planet extends OrbitalComponent {
 
     public Planet(@NotNull GalaxyPosition initPosition, @NotNull OrbitalSpeed _speed){
         super(initPosition);
+        speed = _speed;
+    }
+    public Planet(String name, @NotNull GalaxyPosition initPosition, @NotNull OrbitalSpeed _speed){
+        super(name, initPosition);
         speed = _speed;
     }
 
@@ -45,6 +48,6 @@ public class Planet extends OrbitalComponent {
     public OrbitalComponent copy() {
         final GalaxyPosition newPosition = new GalaxyPosition(position.x, position.y);
         final OrbitalSpeed newSpeed = new OrbitalSpeed(speed.orientation, speed.rate);
-        return new Planet(newPosition, newSpeed);
+        return new Planet(name, newPosition, newSpeed);
     }
 }
