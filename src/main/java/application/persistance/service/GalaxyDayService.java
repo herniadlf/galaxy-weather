@@ -1,11 +1,18 @@
 package application.persistance.service;
 
+import application.GalaxyProperties;
 import application.persistance.GalaxyComponentTable;
 import application.persistance.GalaxyDayComponentPositionPK;
 import application.persistance.GalaxyDayComponentPositionTable;
 import application.persistance.GalaxyDayTable;
 import application.persistance.repository.GalaxyDayRepository;
 import model.galaxy.Galaxy;
+import model.galaxy.OrbitalCenter;
+import model.galaxy.OrbitalComponent;
+import model.galaxy.Orientation;
+import model.galaxy.movement.GalaxyPosition;
+import model.galaxy.movement.OrbitalSpeed;
+import model.galaxy.planet.Planet;
 import model.galaxy.weather.GalaxyWeather;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.BasicJsonParser;
@@ -20,14 +27,23 @@ public class GalaxyDayService {
 
     private final GalaxyDayRepository galaxyDayRepository;
     private final GalaxyDayComponentPositionService galaxyDayComponentPositionService;
+    private final GalaxyWeatherGuruService galaxyWeatherGuruService;
     private final GalaxyComponentService galaxyComponentService;
+    private GalaxyProperties galaxyProperties = null;
+
+    @Autowired
+    public void setGalaxyProps(GalaxyProperties galaxyProperties) {
+        this.galaxyProperties = galaxyProperties;
+    }
 
     @Autowired
     public GalaxyDayService(GalaxyDayRepository galaxyDayRepository,
                             GalaxyComponentService galaxyComponentService,
+                            GalaxyWeatherGuruService galaxyWeatherGuruService,
                             GalaxyDayComponentPositionService galaxyDayComponentPositionService) {
         this.galaxyDayRepository = galaxyDayRepository;
         this.galaxyComponentService = galaxyComponentService;
+        this.galaxyWeatherGuruService = galaxyWeatherGuruService;
         this.galaxyDayComponentPositionService = galaxyDayComponentPositionService;
     }
 
@@ -56,7 +72,9 @@ public class GalaxyDayService {
     }
 
     @Transactional
-    public void create(Galaxy galaxy) {
+    public void create() {
+        final Galaxy galaxy = configureGalaxy();
+        galaxyWeatherGuruService.create(galaxy);
         createFromGalaxy(galaxy);
     }
 
@@ -98,5 +116,39 @@ public class GalaxyDayService {
         final Optional<Double> first = map.keySet().stream().max(Double::compareTo);
         assert first.isPresent();
         return map.get(first.get());
+    }
+
+    private Galaxy configureGalaxy() {
+        final Galaxy.GalaxyBuilder builder = new Galaxy.GalaxyBuilder();
+        builder.withCenter(new OrbitalCenter());
+        final List<OrbitalComponent> planets = new ArrayList<>();
+        galaxyProperties.getPlanets().forEach(planetProp -> {
+            final double initPositionX = planetProp.getInitPositionX();
+            final double initPositionY = planetProp.getInitPositionY();
+            final GalaxyPosition initPos = new GalaxyPosition(initPositionX, initPositionY);
+            final Orientation orientation = planetProp.getClockWise() ? Orientation.CLOCKWISE :
+                    Orientation.COUNTER_CLOCKWISE;
+            final int speedRate = planetProp.getSpeed();
+            final String name = planetProp.getName();
+            final OrbitalSpeed planetSpeed = new OrbitalSpeed(orientation, speedRate);
+            final Planet planet = new Planet(name, initPos, planetSpeed);
+            galaxyComponentService.findOrCreate(planet);
+            planets.add(planet);
+        });
+        final Galaxy galaxy = builder.withComponents(planets).create();
+
+        Date date = new Date();
+        final Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.YEAR, galaxyProperties.getYears());
+        final Date endDate = c.getTime();
+
+        c.setTime(date);
+        while (date.before(endDate)){
+            galaxy.newDay();
+            c.add(Calendar.DAY_OF_YEAR, 1);
+            date = c.getTime();
+        }
+        return galaxy;
     }
 }
