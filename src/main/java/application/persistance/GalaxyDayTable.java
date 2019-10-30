@@ -9,7 +9,6 @@ import java.util.List;
 public class GalaxyDayTable {
     @Id
     @Column(name="NUMBER")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long dayNumber;
 
     @Column(name = "WEATHER", nullable = false)

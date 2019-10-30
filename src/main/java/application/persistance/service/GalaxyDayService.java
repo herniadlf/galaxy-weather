@@ -9,7 +9,6 @@ import model.galaxy.Galaxy;
 import model.galaxy.weather.GalaxyWeather;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -33,40 +32,31 @@ public class GalaxyDayService {
         this.galaxyDayComponentPositionService = galaxyDayComponentPositionService;
     }
 
-    @Transactional
-    public List<GalaxyDayTable> list() {
-        return galaxyDayRepository.findAll();
-    }
-
-
-    public List<GalaxyDayTable> createFromGalaxy(Galaxy galaxy){
+    public void createFromGalaxy(Galaxy galaxy){
         final HashMap<String, GalaxyComponentTable> persistedComponents = new HashMap<>();
         galaxy.getComponents().forEach(comp -> {
             final GalaxyComponentTable component = galaxyComponentService.findOrCreate(comp);
             persistedComponents.put(component.getName(), component);
         });
-        final List<GalaxyDayTable> daysToPersist = new ArrayList<>();
+        final List<GalaxyDayComponentPositionTable> daysComponentPosToPersist = new ArrayList<>();
         galaxy.getDays().forEach(day -> {
             final GalaxyDayTable instance = new GalaxyDayTable();
             instance.setDayNumber(day.getDayNumber());
             instance.setGalaxyWeather(day.getWeather().name());
             final GalaxyDayTable createdInstance = galaxyDayRepository.save(instance);
-            final List<GalaxyDayComponentPositionTable> componentsPosition = new ArrayList<>();
             day.getComponents().forEach(comp -> {
                 final GalaxyDayComponentPositionPK componentPositionPK = new GalaxyDayComponentPositionPK();
                 componentPositionPK.setGalaxyDay(createdInstance);
                 final GalaxyDayComponentPositionTable componentPosition =
-                        galaxyDayComponentPositionService.create(componentPositionPK, comp, persistedComponents);
-                componentsPosition.add(componentPosition);
+                        galaxyDayComponentPositionService.fromComponentPosition(componentPositionPK, comp, persistedComponents);
+                daysComponentPosToPersist.add(componentPosition);
             });
-            instance.setGalaxyDayComponentPositions(componentsPosition);
-            daysToPersist.add(createdInstance);
         });
-        return daysToPersist;
+        galaxyDayComponentPositionService.create(daysComponentPosToPersist);
     }
 
-    public List<GalaxyDayTable> create(Galaxy galaxy) {
-        return createFromGalaxy(galaxy);
+    public void create(Galaxy galaxy) {
+        createFromGalaxy(galaxy);
     }
 
     public GalaxyDayTable getDay(@NotNull Long day) {

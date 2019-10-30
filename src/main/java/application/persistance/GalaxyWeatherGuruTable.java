@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "GALAXY_WEATHER_GURU")
 public class GalaxyWeatherGuruTable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
 
     @Column(name="WEATHER_GURU_CODE", nullable = false)

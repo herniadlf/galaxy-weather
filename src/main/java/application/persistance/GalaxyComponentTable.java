@@ -8,7 +8,7 @@ import java.util.List;
 public class GalaxyComponentTable {
     @Id
     @Column(name="ID")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue
     private long id;
 
     @Column(name = "NAME", nullable = false, unique = true)

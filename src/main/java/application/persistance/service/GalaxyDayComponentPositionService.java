@@ -22,18 +22,6 @@ public class GalaxyDayComponentPositionService {
         this.galaxyDayComponentPositionRepository = galaxyDayComponentPositionRepository;
     }
 
-    @Transactional
-    public List<GalaxyDayComponentPositionTable> list() {
-        return galaxyDayComponentPositionRepository.findAll();
-    }
-
-    @Transactional
-    public GalaxyDayComponentPositionTable create(GalaxyDayComponentPositionPK pk,
-                                                  GalaxyComponent component,
-                                                  HashMap<String, GalaxyComponentTable> persistedComponents) {
-        return galaxyDayComponentPositionRepository.save(fromComponentPosition(pk, component, persistedComponents));
-    }
-
     public GalaxyDayComponentPositionTable fromComponentPosition(GalaxyDayComponentPositionPK pk,
                                                                  GalaxyComponent component,
                                                                  HashMap<String, GalaxyComponentTable> persistedComponents){
@@ -44,5 +32,9 @@ public class GalaxyDayComponentPositionService {
         instance.setPositionX(component.getPosition().x);
         instance.setPositionY(component.getPosition().y);
         return instance;
+    }
+
+    public List<GalaxyDayComponentPositionTable> create(List<GalaxyDayComponentPositionTable> components) {
+        return galaxyDayComponentPositionRepository.saveAll(components);
     }
 }

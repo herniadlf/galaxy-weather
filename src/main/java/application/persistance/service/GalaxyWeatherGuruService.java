@@ -26,11 +26,6 @@ public class GalaxyWeatherGuruService {
     }
 
     @Transactional
-    public List<GalaxyWeatherGuruTable> list() {
-        return galaxyWeatherGuruRepository.findAll();
-    }
-
-    @Transactional
     public GalaxyWeatherGuruTable create(@NotNull Galaxy galaxy) {
         return galaxyWeatherGuruRepository.save(fromGalaxy(galaxy));
     }
