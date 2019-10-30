@@ -14,7 +14,7 @@ import java.util.*;
  * the interface that read the components position and provides info about the galaxy weather.
  */
 public class Galaxy {
-    public static final int FIRST_DAY_NUMBER = 1;
+    public static final Long FIRST_DAY_NUMBER = 1L;
     private List<OrbitalComponent> components = null;
     private List<GalaxyDay> days = null;
     private OrbitalCenter center = null;
@@ -39,20 +39,8 @@ public class Galaxy {
     public void newDay() {
         components.forEach(OrbitalMovable::move);
         final GalaxyWeather newDayWeather = weatherGuru.calculateWeather();
-        final Integer lastDayNumber = days.get(days.size() - 1).getDayNumber();
+        final Long lastDayNumber = days.get(days.size() - 1).getDayNumber();
         days.add(new GalaxyDay(lastDayNumber+1, components, newDayWeather));
-    }
-
-    public GalaxyWeather getDayWeather(Integer day) {
-        GalaxyWeather weather = null;
-        for (final GalaxyDay galaxyDay : days) {
-            if (galaxyDay.getDayNumber().equals(day)){
-                weather = galaxyDay.getWeather();
-                break;
-            }
-        }
-        if (weather == null) throw new RuntimeException(String.format("Couldn't find weather for day %d", day));
-        return weather;
     }
 
     /**

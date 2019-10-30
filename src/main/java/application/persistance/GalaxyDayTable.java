@@ -1,6 +1,5 @@
 package application.persistance;
 
-import model.galaxy.weather.GalaxyWeather;
 
 import javax.persistence.*;
 import java.util.List;
@@ -8,33 +7,31 @@ import java.util.List;
 @Entity
 @Table(name = "GALAXY_DAY")
 public class GalaxyDayTable {
-    @EmbeddedId
-    private GalaxyDayPK galaxyDayPk;
+    @Id
+    @Column(name="NUMBER")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long dayNumber;
 
     @Column(name = "WEATHER", nullable = false)
-    private String galaxyWeatherStr;
+    private String galaxyWeather;
 
     @OneToMany(mappedBy = "galaxyDayComponentPositionPK.galaxyDay")
     private List<GalaxyDayComponentPositionTable> galaxyDayComponentPositions;
 
-    public GalaxyWeather getGalaxyWeather() {
-        return GalaxyWeather.valueOf(galaxyWeatherStr);
+    public String getGalaxyWeather() {
+        return galaxyWeather;
     }
 
-    public String getGalaxyWeatherStr() {
-        return galaxyWeatherStr;
+    public void setGalaxyWeather(String galaxyWeather) {
+        this.galaxyWeather = galaxyWeather;
     }
 
-    public void setGalaxyWeather(GalaxyWeather galaxyWeather) {
-        galaxyWeatherStr = galaxyWeather.name();
+    public Long getDayNumber() {
+        return dayNumber;
     }
 
-    public GalaxyDayPK getGalaxyDayPk() {
-        return galaxyDayPk;
-    }
-
-    public void setGalaxyDayPk(GalaxyDayPK galaxyDayPk) {
-        this.galaxyDayPk = galaxyDayPk;
+    public void setDayNumber(Long dayNumber) {
+        this.dayNumber = dayNumber;
     }
 
     public List<GalaxyDayComponentPositionTable> getGalaxyDayComponentPositions() {

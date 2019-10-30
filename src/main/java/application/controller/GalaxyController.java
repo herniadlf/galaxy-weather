@@ -1,7 +1,11 @@
 package application.controller;
 
 import application.GalaxyProperties;
-import application.persistance.service.GalaxyService;
+import application.persistance.GalaxyDayTable;
+import application.persistance.GalaxyWeatherGuruTable;
+import application.persistance.service.GalaxyComponentService;
+import application.persistance.service.GalaxyDayService;
+import application.persistance.service.GalaxyWeatherGuruService;
 import model.galaxy.Galaxy;
 import model.galaxy.OrbitalCenter;
 import model.galaxy.OrbitalComponent;
@@ -25,7 +29,9 @@ import java.util.List;
 @RequestMapping("/galaxy")
 public class GalaxyController {
 
-    private final GalaxyService service;
+    private final GalaxyWeatherGuruService galaxyWeatherGuruService;
+    private final GalaxyDayService galaxyDayService;
+    private final GalaxyComponentService componentService;
 
     private GalaxyProperties galaxyProperties = null;
 
@@ -34,20 +40,30 @@ public class GalaxyController {
         this.galaxyProperties = galaxyProperties;
     }
     @Autowired
-    public GalaxyController(GalaxyService service) {
-        this.service = service;
+    public GalaxyController(GalaxyWeatherGuruService galaxyWeatherGuruService,
+                            GalaxyDayService galaxyDayService,
+                            GalaxyComponentService componentService) {
+        this.galaxyWeatherGuruService = galaxyWeatherGuruService;
+        this.galaxyDayService = galaxyDayService;
+        this.componentService = componentService;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/")
     public String create(){
-        service.create(buildGalaxyHACK());
+        final Galaxy galaxy = configureGalaxy();
+        galaxyWeatherGuruService.create(galaxy);
+        galaxyDayService.create(galaxy);
         return "ok";
     }
 
     @RequestMapping("/clima")
-    String getWeatherByDay(@RequestParam("dia") Integer day) {
-        final Galaxy galaxy = buildGalaxyHACK();
-        final GalaxyWeather dayWeather = galaxy.getDayWeather(day);
+    String getWeatherByDay(@RequestParam("dia") Long day) {
+        // We look for galaxy configuration first or we fail
+        final List<GalaxyWeatherGuruTable> galaxyWeatherGuru = galaxyWeatherGuruService.findGalaxyWeatherGuru();
+        if (galaxyWeatherGuru.isEmpty())
+            return "Must call POST galaxyWeatherGuruService \"galaxy/\" first";
+        final GalaxyDayTable galaxyDay = galaxyDayService.getDay(day);
+        final String dayWeather = galaxyDay.getGalaxyWeather();
         return String.format("{ \"dia\": %d, \"clima\": \"%s\" }", day, dayWeather);
     }
 
@@ -67,12 +83,15 @@ public class GalaxyController {
 
     @RequestMapping("/cantidad_de_periodos")
     String getWeatherQuantities(@RequestParam("tipo") GalaxyWeather weather) {
-        final Galaxy galaxy = buildGalaxyHACK();
-        final Integer responseQty = galaxy.getWeatherQuantities(weather);
+        // We look for galaxy configuration first or we fail
+        final List<GalaxyWeatherGuruTable> galaxyWeatherGuru = galaxyWeatherGuruService.findGalaxyWeatherGuru();
+        if (galaxyWeatherGuru.isEmpty())
+            return "Must call POST galaxyWeatherGuruService \"galaxy/\" first";
+        final Integer responseQty = galaxyDayService.getWeatherQuantities(weather);
         return String.format("{ \"tipo\" : \"%s\", \"cantidad\": %d }", weather, responseQty);
     }
 
-    private Galaxy buildGalaxyHACK() {
+    private Galaxy configureGalaxy() {
         final Galaxy.GalaxyBuilder builder = new Galaxy.GalaxyBuilder();
         builder.withCenter(new OrbitalCenter());
         final List<OrbitalComponent> planets = new ArrayList<>();
@@ -86,6 +105,7 @@ public class GalaxyController {
             final String name = planetProp.getName();
             final OrbitalSpeed planetSpeed = new OrbitalSpeed(orientation, speedRate);
             final Planet planet = new Planet(name, initPos, planetSpeed);
+            componentService.findOrCreate(planet);
             planets.add(planet);
         });
         final Galaxy galaxy = builder.withComponents(planets).create();

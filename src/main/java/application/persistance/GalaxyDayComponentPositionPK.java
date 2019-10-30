@@ -12,10 +12,7 @@ public class GalaxyDayComponentPositionPK implements Serializable {
     private static final long serialVersionUID = -8939177092675788375L;
 
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name="GALAXY_ID", referencedColumnName="GALAXY_ID"),
-            @JoinColumn(name="GALAXY_DAY_NUMBER", referencedColumnName="NUMBER")
-    })
+    @JoinColumn(name="GALAXY_DAY_NUMBER", referencedColumnName="NUMBER")
     private GalaxyDayTable galaxyDay;
 
     @ManyToOne

@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GalaxyDay {
-    private final Integer dayNumber;
+    private final Long dayNumber;
     private final List<OrbitalComponent> components;
     private final GalaxyWeather weather;
 
-    public GalaxyDay(Integer _dayNumber, List<OrbitalComponent> _components, GalaxyWeather _weather){
+    public GalaxyDay(Long _dayNumber, List<OrbitalComponent> _components, GalaxyWeather _weather){
         dayNumber = _dayNumber;
         components = new ArrayList<>();
         _components.forEach(comp -> {
@@ -20,7 +20,7 @@ public class GalaxyDay {
         weather = _weather;
     }
 
-    public Integer getDayNumber(){
+    public Long getDayNumber(){
         return dayNumber;
     }
 
